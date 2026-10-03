@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Form Generator</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="d-sm-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-dark mb-0">Create Registration Form</h3>
+          </div>
+          <div id="msg"></div>
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Create Registration Form</h6></div>
+            <div class="card-body">
+              <form id="gen-form" novalidate>
+                <div class="form-row">
+                  <div class="form-group col-md-6 mb-3">
+                    <label class="font-weight-bold" for="event-name"><i class="fas fa-calendar-alt mr-1"></i> Event Name</label>
+                    <input type="text" id="event-name" class="form-control" maxlength="100" required>
+                    <small class="form-text text-muted" id="slug-hint">The share link is created from the name.</small>
+                  </div>
+                  <div class="form-group col-md-6 mb-3">
+                    <label class="font-weight-bold" for="event-desc"><i class="fas fa-align-left mr-1"></i> Description</label>
+                    <textarea id="event-desc" class="form-control" rows="3" maxlength="1000"></textarea>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-4 mb-3">
+                    <label class="font-weight-bold"><i class="fas fa-users mr-1"></i> Type</label>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="event_type" id="type-ind" value="individual" checked>
+                      <label class="form-check-label font-weight-bold" for="type-ind">Individual</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="event_type" id="type-team" value="team">
+                      <label class="form-check-label font-weight-bold" for="type-team">Team</label></div>
+                    <div id="team-size-wrap" class="mt-2" style="display:none">
+                      <label class="font-weight-bold small mb-1" for="team-size"><i class="fas fa-user-friends mr-1"></i> Team size</label>
+                      <select id="team-size" class="form-control form-control-sm"></select>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-8 mb-3">
+                    <label class="font-weight-bold"><i class="fas fa-list mr-1"></i> Fields to include</label>
+                    <div class="row" id="preset-fields"></div>
+                    <div class="mt-2">
+                      <label class="small font-weight-bold mb-1" for="custom-fields">Other fields <span class="text-muted font-weight-normal">(comma separated, e.g. tshirt_size, food_preference)</span></label>
+                      <input type="text" id="custom-fields" class="form-control form-control-sm" maxlength="300" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-primary mt-2" type="submit" id="gen-btn"><i class="fas fa-magic mr-1"></i> Generate</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Existing Forms</h6></div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-striped my-0">
+                  <thead><tr><th>Event</th><th>Type</th><th>Fields</th><th class="text-center">Responses</th><th style="min-width:260px">Link</th><th></th></tr></thead>
+                  <tbody id="forms-body"><tr><td colspan="6" class="text-muted">Loading&hellip;</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/forms-generator.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Database Management</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="d-sm-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-dark mb-0">Manage Database</h3>
+          </div>
+          <div id="msg"></div>
+          <div class="row">
+            <div class="col-md-6 col-xl-4 mb-4">
+              <label class="small font-weight-bold" for="table-select">Table</label>
+              <select class="form-control" id="table-select"><option value="">Loading tables&hellip;</option></select>
+            </div>
+            <div class="col-md-6 col-xl-4 mb-4 ml-xl-auto">
+              <div class="card shadow border-left-success py-2"><div class="card-body"><div class="row align-items-center no-gutters">
+                <div class="col mr-2">
+                  <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Total Rows</span></div>
+                  <div class="text-dark font-weight-bold h5 mb-0"><span id="total-rows">No table chosen</span></div>
+                </div>
+                <div class="col-auto"><i class="fas fa-database fa-2x text-gray-300"></i></div>
+              </div></div></div>
+            </div>
+          </div>
+          <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <p class="text-primary m-0 font-weight-bold" id="card-title">No table selected</p>
+              <button class="btn btn-success btn-sm" id="add-btn" style="display:none"><i class="fas fa-plus mr-1"></i>Add row</button>
+            </div>
+            <div class="card-body">
+              <div class="row mb-2">
+                <div class="col-md-6 text-nowrap">
+                  <label class="mb-0">Show&nbsp;
+                    <select id="per-page" class="form-control form-control-sm custom-select custom-select-sm d-inline-block" style="width:auto">
+                      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
+                    </select>&nbsp;entries
+                  </label>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-sm table-striped my-0">
+                  <thead><tr id="grid-head"></tr></thead>
+                  <tbody id="grid-body"><tr><td class="text-muted">Pick a table above.</td></tr></tbody>
+                </table>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-6 align-self-center"><p class="mb-2 mb-md-0 text-muted small" id="info" role="status" aria-live="polite"></p></div>
+                <div class="col-md-6" id="pager"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="row-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <form id="row-form" novalidate>
+                  <div class="modal-header"><h5 class="modal-title" id="modal-title">Row</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+                  <div class="modal-body">
+                    <div id="modal-msg"></div>
+                    <div id="modal-fields"></div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-save"><i class="fas fa-save mr-1"></i>Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/db-manage.js"></script>
+</body>
+</html>

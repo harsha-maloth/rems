@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Certificate Generator</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="d-sm-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-dark mb-0">Certificate Generation</h3>
+          </div>
+          <div id="msg"></div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Generate Certificates</h6></div>
+            <div class="card-body">
+              <a class="btn btn-primary btn-sm mb-3" href="assets/Sample_headers.csv" download><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Download sample CSV</a>
+              <form id="cert-form" novalidate>
+                <div class="form-group">
+                  <label class="font-weight-bold" for="csv-file"><i class="fas fa-file-csv mr-1"></i> Certificate list (CSV file)</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="csv-file" accept=".csv,text/csv">
+                    <label class="custom-file-label" for="csv-file" id="csv-label">Choose file...</label>
+                  </div>
+                  <small class="form-text text-muted">Needs the columns <code>name</code> and <code>email</code>. Optional: <code>regno, dept, year, section, position, college</code>. Everything is read in your browser; nothing is uploaded except the finished certificates.</small>
+                  <div id="csv-info" class="mt-2"></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label class="font-weight-bold" for="event-name"><i class="fas fa-calendar-alt mr-1"></i> Event name</label>
+                    <input type="text" id="event-name" class="form-control" maxlength="100" placeholder="Enter the event name">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label class="font-weight-bold" for="event-date"><i class="fas fa-clock mr-1"></i> Event date</label>
+                    <input type="date" id="event-date" class="form-control">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label class="font-weight-bold" for="event-type"><i class="fas fa-university mr-1"></i> Event type</label>
+                    <select id="event-type" class="form-control custom-select">
+                      <option value="0">Intra-college event</option>
+                      <option value="1">Inter-college event</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="font-weight-bold" for="org-name"><i class="fas fa-users mr-1"></i> Conducted by</label>
+                  <input type="text" id="org-name" class="form-control" maxlength="80">
+                  <small class="form-text text-muted">Printed on the certificate as &ldquo;Conducted by &hellip;&rdquo;. Use your club name.</small>
+                </div>
+                <p class="small text-muted mb-2" id="type-help"></p>
+
+                <a class="small" data-toggle="collapse" href="#layout-box" role="button" aria-expanded="false" aria-controls="layout-box"><i class="fas fa-sliders-h mr-1"></i> Layout (optional)</a>
+                <div class="collapse mt-2" id="layout-box">
+                  <div class="form-row">
+                    <div class="form-group col-6 col-md-3">
+                      <label class="small font-weight-bold mb-1" for="lay-x">Left margin</label>
+                      <input type="number" id="lay-x" class="form-control form-control-sm" value="206" min="0" max="1500" step="2">
+                    </div>
+                    <div class="form-group col-6 col-md-3">
+                      <label class="small font-weight-bold mb-1" for="lay-y">Move text down / up</label>
+                      <input type="number" id="lay-y" class="form-control form-control-sm" value="0" min="-600" max="600" step="2">
+                    </div>
+                    <div class="form-group col-6 col-md-3">
+                      <label class="small font-weight-bold mb-1" for="lay-w">Text width</label>
+                      <input type="number" id="lay-w" class="form-control form-control-sm" value="2000" min="600" max="3300" step="10">
+                    </div>
+                    <div class="form-group col-6 col-md-3">
+                      <label class="small font-weight-bold mb-1" for="lay-c">Text colour</label>
+                      <input type="color" id="lay-c" class="form-control form-control-sm" value="#535453">
+                    </div>
+                  </div>
+                  <small class="form-text text-muted mb-2">Units are pixels on a 3507 &times; 2481 page (A4 landscape at 300 dpi); other template sizes are scaled to match. The preview below updates as you change these.</small>
+                </div>
+
+                <div class="mt-3">
+                  <button class="btn btn-secondary mr-2" type="button" id="preview-btn"><i class="fas fa-eye mr-1"></i> Preview</button>
+                  <button class="btn btn-primary" type="submit" id="gen-btn"><i class="fas fa-medal mr-1"></i> Generate certificates</button>
+                  <button class="btn btn-outline-danger ml-2" type="button" id="cancel-btn" style="display:none"><i class="fas fa-stop mr-1"></i> Stop</button>
+                </div>
+              </form>
+              <div id="progress-wrap" class="mt-3" style="display:none">
+                <div class="progress"><div id="progress-bar" class="progress-bar" role="progressbar" style="width:0%">0%</div></div>
+                <small class="text-muted" id="progress-text"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4" id="preview-card" style="display:none">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Preview <span class="text-muted font-weight-normal small" id="preview-for"></span></h6></div>
+            <div class="card-body text-center">
+              <canvas id="preview-canvas" style="width:100%;max-width:980px;height:auto;border:1px solid #ddd"></canvas>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4" id="result-card" style="display:none">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Certification Creation Log</h6></div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-striped my-0">
+                  <thead><tr><th>#</th><th>Name</th><th id="th-2">Reg No</th><th>Position</th><th>Certificate</th></tr></thead>
+                  <tbody id="result-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Certificate Templates</h6></div>
+            <div class="card-body">
+              <p class="small text-muted">Until you upload your own design, a plain built-in design is used. Upload an image (PNG, JPG or WebP, up to 10&nbsp;MB, A4 landscape, ideally 3507 &times; 2481) for each kind of certificate. Leave the middle of the page empty: the text starts about 40% of the way down, on the left. Templates are saved once and reused by every admin.</p>
+              <div class="row" id="tpl-row"></div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Generated Events</h6></div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-striped my-0">
+                  <thead><tr><th>Event</th><th>Date</th><th>Type</th><th class="text-center">Certificates</th><th></th></tr></thead>
+                  <tbody id="events-body"><tr><td colspan="5" class="text-muted">Loading&hellip;</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/cert-generate.js"></script>
+</body>
+</html>
