@@ -259,7 +259,7 @@ select t.count_is('dave sees both clubs',                'select count(*) from p
 select t.count_is('dave cannot read A mailing lists',    'select count(*) from public.mailing_lists where name like ''List A%''', 0);
 select t.count_is('dave cannot read A responses',        'select count(*) from public.form_responses', 0);
 select t.is_true ('dave can create a club',              public.create_club('Test Club C', 'test-c') is not null);
-select t.must_touch('dave adds a position',              format('insert into public.positions (club_id, title) values (%s, ''Treasurer'')', t.a()), 1);
+select t.must_touch('dave adds a position',              format('insert into public.positions (club_id, title) values (%s, ''Archivist'')', t.a()), 1);
 select t.must_fail ('dave cannot invent a permission',   format('insert into public.positions (club_id, title, permissions) values (%s, ''Odd'', ''{fly.to.moon}'')', t.a()));
 select t.must_touch('dave manages legacy storage path',  'insert into storage.objects (bucket_id, name) values (''certificates'', ''old-event/run/Certificate-1.png'')', 1);
 

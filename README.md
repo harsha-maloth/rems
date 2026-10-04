@@ -31,7 +31,8 @@ The numbers above are the original build phases. The [platform plan](#clubs-and-
 |---|---|---|
 | 1 | Multi-club foundation: clubs, positions, `has_perm`, club-scoped data and policies, club switcher | Done |
 | 2 | Student identity and portal: admitted list, account claim, student portal | Done |
-| 3 to 8 | Club portal and hierarchy, intake, events, university portal, transcript, hardening | Planned |
+| 3 | Club portal and hierarchy: positions, appoint, hand over, teams, member list | Built, awaiting live check |
+| 4 to 8 | Intake, events, university portal, transcript, hardening | Planned |
 
 ## Clubs and permissions (platform phase 1)
 
@@ -54,9 +55,20 @@ select public.create_club('Robotics Club', 'robotics', 'We build robots.');   --
 select public.appoint_president(<that id>, 'president@example.com');
 ```
 
-Appointing other positions, term handovers and the position editor arrive in platform phase 3. Until then add `positions`, `position_terms` and `memberships` rows with SQL.
+Appointing people, handovers and the position editor are in platform phase 3 (below); no SQL is needed for them any more.
 
 **Test it:** `supabase/tests/phase1_two_clubs.sql` creates two clubs and six accounts inside a transaction, tries to read and change Club B as Club A's president (and as a plain member, an expired officer, a platform admin and an anonymous visitor), and rolls back. Run it in the SQL Editor after any change to policies. It stops with a message starting `FAIL` if anything leaks, and ends with `ALL CHECKS PASSED` otherwise.
+
+## Club portal and hierarchy (platform phase 3)
+
+Run `supabase/migrations/0007_club_hierarchy.sql` once (after 0001 to 0006), then open **Members & positions** in the menu (`club.html`).
+
+- **Standard positions:** President (level 1), Vice President, Secretary and Treasurer (level 2), Wing Lead (level 3, one team) and Core Member (level 4, one team). `create_club` adds them to every new club, and the migration adds them to existing clubs. Edit them or add your own on the Positions tab.
+- **Hierarchy rules (enforced in the database, not the page):** level 1 is the top. You can only appoint, edit or end positions **below** your own level; you can only hand out permissions you hold yourself; a team-scoped position (a wing lead) acts only inside its own team; and nobody except a platform admin can leave a club without a President.
+- **Appoint, end, hand over:** a person must already have an account. Handing over is one step: the successor is appointed first, then the outgoing holder's term ends. Ending a term takes effect at once.
+- **Member list:** club officers see everyone; a wing lead sees only their own team.
+- **History is kept:** positions that were ever held cannot be deleted, and every change lands in the audit log.
+- **Test it:** `supabase/tests/phase3_hierarchy.sql` (President builds the team, vice president and wing lead hit their limits, a handover, an outsider and an anonymous visitor). It rolls back and ends with `ALL CHECKS PASSED`. Re-run `phase1_two_clubs.sql` too: it now uses the title "Archivist" instead of "Treasurer", which the standard positions already take.
 
 ## Students and the student portal (platform phase 2)
 
@@ -183,7 +195,7 @@ public `certificates` storage bucket and saves one row per person in `certificat
 
 ### 1. Supabase
 1. Create a project at supabase.com.
-2. **SQL Editor** -> run `supabase/migrations/0001_init.sql`, then `0002` to `0006` in order (see `docs/deploy-your-own-club.md`).
+2. **SQL Editor** -> run `supabase/migrations/0001_init.sql`, then `0002` to `0007` in order (see `docs/deploy-your-own-club.md`).
 3. **Authentication -> Sign In / Providers -> Email**: keep "Allow new users to sign up" **off** until `0006` is applied.
    After that you turn it **on**: the database then only accepts admitted students and invited staff.
 4. **Authentication -> URL Configuration**: set *Site URL* to your Pages URL and add

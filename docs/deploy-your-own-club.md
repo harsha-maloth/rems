@@ -5,7 +5,7 @@ Any IIST club can run its own ClubOrbit. You need a GitHub account and a free Su
 1. **Fork** this repository (or use it as a template) under your club's GitHub account.
 2. **Create a Supabase project** at supabase.com. Use a club account, not a personal one, and add a second maintainer.
 3. **Run the database setup.** In the Supabase SQL Editor run, in order:
-   `supabase/migrations/0001_init.sql`, `0002_hide_certificate_emails.sql`, `0003_admin_list_columns.sql`, `0004_mail_and_short_links.sql`, `0005_multi_club_foundation.sql`, `0006_student_identity.sql`.
+   `supabase/migrations/0001_init.sql`, `0002_hide_certificate_emails.sql`, `0003_admin_list_columns.sql`, `0004_mail_and_short_links.sql`, `0005_multi_club_foundation.sql`, `0006_student_identity.sql`, `0007_club_hierarchy.sql`.
 4. **Sign-ups:** with `0006` applied you may turn "Allow new users to sign up" ON (the database only accepts admitted students and invited staff). Keep "Confirm email" ON. Set the institute domain if it is not `iist.ac.in` (see the README).
 5. **Add the first admin:** in the SQL Editor run `select public.invite_staff('you@example.com');`, then Authentication -> Users -> Add user (tick Auto confirm), then make that account platform admin and president of the starting club (rename the club later in the `clubs` table):
    ```sql
