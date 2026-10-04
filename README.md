@@ -30,7 +30,8 @@ The numbers above are the original build phases. The [platform plan](#clubs-and-
 | Platform phase | Scope | State |
 |---|---|---|
 | 1 | Multi-club foundation: clubs, positions, `has_perm`, club-scoped data and policies, club switcher | Done |
-| 2 to 8 | Student identity, club portal, intake, events, university portal, transcript, hardening | Planned |
+| 2 | Student identity and portal: admitted list, account claim, student portal | Done |
+| 3 to 8 | Club portal and hierarchy, intake, events, university portal, transcript, hardening | Planned |
 
 ## Clubs and permissions (platform phase 1)
 
@@ -56,6 +57,22 @@ select public.appoint_president(<that id>, 'president@example.com');
 Appointing other positions, term handovers and the position editor arrive in platform phase 3. Until then add `positions`, `position_terms` and `memberships` rows with SQL.
 
 **Test it:** `supabase/tests/phase1_two_clubs.sql` creates two clubs and six accounts inside a transaction, tries to read and change Club B as Club A's president (and as a plain member, an expired officer, a platform admin and an anonymous visitor), and rolls back. Run it in the SQL Editor after any change to policies. It stops with a message starting `FAIL` if anything leaks, and ends with `ALL CHECKS PASSED` otherwise.
+
+## Students and the student portal (platform phase 2)
+
+Run `supabase/migrations/0006_student_identity.sql` once (after 0001 to 0005).
+
+- **The admitted list.** The institute gives a CSV (`institute_email, enrolment_no, full_name, department, programme, batch`). A **university admin** imports it on `university-students.html` (sample: `assets/Sample_students.csv`). Importing sends no e-mail. Re-importing updates people already on the list.
+- **Claiming an account.** A student opens `signup.html`, enters their institute e-mail and a password, and confirms the link Supabase e-mails them. The database only creates the account if that e-mail is on the list and unclaimed (a gate on `auth.users`), so strangers cannot sign up even though public sign-ups must be switched ON. The new account is linked to the student's row and the status becomes `student`.
+- **The institute domain** is a setting. The default is `iist.ac.in`; change it with `update public.app_settings set value = 'example.ac.in' where key = 'institute_email_domain';`
+- **Student portal** (`student.html`): the institute record, a getting-started checklist, "my clubs and positions", the club directory and **my certificates** (every certificate issued to the student's e-mail across all clubs, found through `my_certificates()`; the e-mail column itself stays unreadable). Students with no club land here after login.
+- **Roles.** `university_admins` is separate from platform admins. A platform admin can add one (`select public.add_university_admin('person@example.com');`) but cannot read the student list unless they are one. Both actions are audited.
+- **Staff accounts.** Because the gate covers every new account, create staff in *Authentication -> Users -> Add user* only after `select public.invite_staff('person@example.com');`. Existing accounts are unaffected.
+- **Privacy.** Students can read only their own row; nobody edits the table directly (the import function is the only writer); `can_claim()` answers only yes or no. Collect only what the portal needs (DPDP Act 2023): keep the list to the columns above.
+
+**Supabase settings to change for this phase** (Authentication): turn **ON** "Allow new users to sign up", keep **Confirm email ON**, and add `https://YOUR-USER.github.io/YOUR-REPO/login.html` to Redirect URLs.
+
+**Test it:** `supabase/tests/phase2_students.sql` imports a list, claims accounts, and checks that students, outsiders, platform admins and anonymous visitors see exactly what they should. Run it after Phase 1's test; both must end with `ALL CHECKS PASSED`.
 
 ## Public pages (Phase 3)
 
@@ -166,12 +183,12 @@ public `certificates` storage bucket and saves one row per person in `certificat
 
 ### 1. Supabase
 1. Create a project at supabase.com.
-2. **SQL Editor** -> run `supabase/migrations/0001_init.sql`, then `0002` to `0005` in order (see `docs/deploy-your-own-club.md`).
-3. **Authentication -> Sign In / Providers -> Email**: turn **off** "Allow new users to sign up".
-   The anon key is public, so this stops strangers creating accounts. You add members yourself.
+2. **SQL Editor** -> run `supabase/migrations/0001_init.sql`, then `0002` to `0006` in order (see `docs/deploy-your-own-club.md`).
+3. **Authentication -> Sign In / Providers -> Email**: keep "Allow new users to sign up" **off** until `0006` is applied.
+   After that you turn it **on**: the database then only accepts admitted students and invited staff.
 4. **Authentication -> URL Configuration**: set *Site URL* to your Pages URL and add
    `https://YOUR-USER.github.io/YOUR-REPO/change-password.html` to *Redirect URLs*.
-5. **Authentication -> Users -> Add user** (email + password, tick "Auto confirm").
+5. In the SQL Editor run `select public.invite_staff('you@example.com');`, then **Authentication -> Users -> Add user** (email + password, tick "Auto confirm").
 6. Make yourself platform admin and president of the starting club (SQL Editor):
    ```sql
    update public.profiles

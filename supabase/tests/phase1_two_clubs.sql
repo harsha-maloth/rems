@@ -78,6 +78,14 @@ grant execute on all functions in schema t to anon, authenticated;
 --   carol  plain member of Club A       dave  platform admin, no club position
 --   erin   President of A, term ended   frank wing lead (team scope) in A
 -- ---------------------------------------------------------------------
+-- From migration 0006 on, an account may only be created for an invited or admitted e-mail.
+do $$ begin
+  if to_regclass('public.signup_invites') is not null then
+    insert into public.signup_invites (email)
+    select e || '@test.local' from unnest(array['alice','bob','carol','dave','erin','frank']) e;
+  end if;
+end $$;
+
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-00000000000a', 'alice@test.local'),
   ('00000000-0000-0000-0000-00000000000b', 'bob@test.local'),

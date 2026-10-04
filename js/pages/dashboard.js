@@ -11,6 +11,9 @@
   var form = document.getElementById('alert-form');
   var msg = document.getElementById('msg');
   if (!REMS.club) {
+    // A student who is not in any club yet lands in the student portal.
+    var own = await REMS.sb.from('students').select('id').eq('profile_id', profile.id).maybeSingle();
+    if (own.data) { location.replace('student.html'); return; }
     // Signed in, but no club has added this account yet (or migration 0005 is missing).
     msg.innerHTML = '<div class="alert alert-info">You are not part of any club yet. Ask a club president to add you, or a platform admin to create your club.</div>';
     Array.prototype.forEach.call(form.elements, function (el) { el.disabled = true; });
