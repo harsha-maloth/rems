@@ -153,15 +153,15 @@ public `certificates` storage bucket and saves one row per person in `certificat
 
 | Page | URL | Who | Notes |
 |---|---|---|---|
-| Update Mailing List | `mailing-list.html` | admins | Upload a CSV (`name`, `email`) to create a list or add people to an existing one (same name). Browse, add or remove people, download a list as CSV, delete a list. Duplicate and malformed addresses are skipped. |
-| Bulk Mailer | `mailing-bulk.html` | admins | Pick a list, write subject, title and message, optional button, logo and cover image. Live preview, **Send a test to me**, then **Send to the list** with a progress bar and a Stop button. |
-| Link Shortener | `link-short.html` | admins | Shorten a link with an optional custom name. Lists all links with click counts; delete any. |
+| Contact lists | `mailing-list.html` | admins | Upload a CSV (`name`, `email`) to create a list or add people to an existing one (same name). Browse, add or remove people, download a list as CSV, delete a list. Duplicate and malformed addresses are skipped. |
+| Send email | `mailing-bulk.html` | admins | Pick a list, write subject, title and message, optional button, logo and cover image. Live preview, **Send a test to me**, then **Send to the list** with a progress bar and a Stop button. |
+| Short links | `link-short.html` | admins | Shorten a link with an optional custom name. Lists all links with click counts; delete any. |
 | Short link | `/s/NAME` | everyone | Opens through `404.html`, which asks Supabase for the target and redirects. Only `http(s)` targets are followed. |
 
 **One-time setup**
 
 1. SQL Editor: run `supabase/migrations/0004_mail_and_short_links.sql` (creates `short_links` and `resolve_short_link()`, and stops duplicate addresses inside a list).
-2. Sending e-mail needs a server, so Bulk Mailer uses an **Edge Function**. In the Supabase Dashboard go to *Edge Functions -> Deploy a new function -> Via Editor*, name it exactly `send-bulk-mail`, paste `supabase/functions/send-bulk-mail/index.ts` and deploy. Leave *Verify JWT* on.
+2. Sending e-mail needs a server, so Send email uses an **Edge Function**. In the Supabase Dashboard go to *Edge Functions -> Deploy a new function -> Via Editor*, name it exactly `send-bulk-mail`, paste `supabase/functions/send-bulk-mail/index.ts` and deploy. Leave *Verify JWT* on.
    (With the CLI instead: `supabase functions deploy send-bulk-mail`.)
 3. *Edge Functions -> Secrets*, add:
 
@@ -174,7 +174,7 @@ public `certificates` storage bucket and saves one row per person in `certificat
    | `SMTP_FROM` | optional, e.g. `IIST Clubs <club@gmail.com>` |
 
    The SMTP password lives only in Supabase. It is never in this repository or in the browser.
-4. Optional `js/config.js` keys that pre-fill the Bulk Mailer: `MAIL_BUTTON_LABEL`, `MAIL_BUTTON_URL`, `MAIL_LOGO_URL`, `MAIL_COVER_URL`.
+4. Optional `js/config.js` keys that pre-fill Send email: `MAIL_BUTTON_LABEL`, `MAIL_BUTTON_URL`, `MAIL_LOGO_URL`, `MAIL_COVER_URL`.
 
 **How sending works and its limits**
 

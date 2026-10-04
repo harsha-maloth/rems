@@ -3,7 +3,7 @@
  */
 (async function () {
   'use strict';
-  document.title = 'Form Generator: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Event forms: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ perm: 'form.manage' }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';

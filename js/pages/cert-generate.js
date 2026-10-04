@@ -10,7 +10,7 @@
  */
 (async function () {
   'use strict';
-  document.title = 'Certificate Generator: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Issue certificates: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ perm: 'certificate.issue' }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';
