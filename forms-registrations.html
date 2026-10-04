@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="stylesheet" href="assets/css/orbit-ui.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Registrations</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="orbit-page-header">
+            <div>
+            <h3 class="text-dark mb-0 orbit-page-title">Registrations</h3>
+            <p class="text-muted mb-0 page-hint">See who signed up for an event form and download the answers.</p>
+          </div>
+          </div>
+          <div id="msg"></div>
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold" id="card-title">Answers</h6></div>
+            <div class="card-body">
+              <div class="form-row align-items-center mb-3">
+                <div class="col-md-6 mb-2 mb-md-0">
+                  <select id="form-select" class="form-control custom-select"><option value="">Loading forms&hellip;</option></select>
+                </div>
+                <div class="col-auto mb-2 mb-md-0" id="actions" style="display:none">
+                  <button class="btn btn-primary btn-sm" id="csv-btn" type="button"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Download CSV</button>
+                  <a class="btn btn-outline-secondary btn-sm" id="share-link" href="#" target="_blank" rel="noopener"><i class="fas fa-external-link-alt fa-sm mr-1"></i>Open form</a>
+                </div>
+                <div class="col-auto ml-md-auto text-muted small" id="total" aria-live="polite"></div>
+              </div>
+              <div id="grid-wrap" style="display:none">
+                <div class="row mb-2">
+                  <div class="col-md-6 text-nowrap">
+                    <label class="mb-0">Show&nbsp;
+                      <select id="per-page" class="form-control form-control-sm custom-select custom-select-sm d-inline-block" style="width:auto">
+                        <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
+                      </select>&nbsp;entries
+                    </label>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped table-sm my-0">
+                    <thead class="thead-light"><tr id="grid-head"></tr></thead>
+                    <tbody id="grid-body"></tbody>
+                  </table>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-6 align-self-center"><p class="mb-2 mb-md-0 text-muted small" id="info" role="status"></p></div>
+                  <div class="col-md-6" id="pager"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/forms-registrations.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="stylesheet" href="assets/css/orbit-ui.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Short links</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="orbit-page-header">
+            <div>
+            <h3 class="text-dark mb-0 orbit-page-title">Short links</h3>
+            <p class="text-muted mb-0 page-hint">Turn a long web address into a short one you can share.</p>
+          </div>
+          </div>
+          <div id="msg"></div>
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Shorten a link</h6></div>
+            <div class="card-body">
+              <form id="short-form" novalidate>
+                <div class="form-group">
+                  <label class="font-weight-bold" for="s-url"><i class="fas fa-link mr-1"></i> Original link</label>
+                  <input type="url" id="s-url" class="form-control" maxlength="2000" placeholder="https://example.com/a/very/long/address">
+                </div>
+                <div class="form-group">
+                  <label class="font-weight-bold" for="s-slug"><i class="fas fa-tag mr-1"></i> Short name (optional)</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text" id="s-prefix"></span></div>
+                    <input type="text" id="s-slug" class="form-control" maxlength="40" placeholder="workshop26" autocomplete="off">
+                  </div>
+                  <small class="form-text text-muted">3 to 40 letters, digits, <code>-</code> or <code>_</code>. Capital letters matter. Leave empty to get a random one.</small>
+                </div>
+                <button type="submit" class="btn btn-primary" id="s-btn"><i class="fas fa-cut mr-1"></i> Shorten</button>
+              </form>
+              <div id="s-result" class="mt-3" style="display:none">
+                <label class="font-weight-bold">Your short link</label>
+                <div class="input-group">
+                  <input type="text" id="s-out" class="form-control" readonly>
+                  <div class="input-group-append"><button class="btn btn-outline-primary" type="button" id="s-copy"><i class="far fa-copy"></i> Copy</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Short links</h6></div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-striped my-0">
+                  <thead><tr><th>Short link</th><th>Goes to</th><th class="text-center">Clicks</th><th>Made by</th><th></th></tr></thead>
+                  <tbody id="links-body"><tr><td colspan="5" class="text-muted">Loading&hellip;</td></tr></tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <small class="text-muted" id="links-info"></small>
+                <div>
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="links-prev">&laquo; Previous</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="links-next">Next &raquo;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/link-short.js"></script>
+</body>
+</html>

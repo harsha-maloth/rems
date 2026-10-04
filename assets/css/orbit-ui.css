@@ -1,0 +1,57 @@
+:root {
+
+  --orbit-space-1: .25rem;
+  --orbit-space-2: .5rem;
+  --orbit-space-3: .75rem;
+  --orbit-space-4: 1rem;
+  --orbit-space-5: 1.5rem;
+  --orbit-space-6: 2rem;
+
+  --orbit-radius: .35rem;
+  --orbit-line: rgba(128, 128, 128, .28);
+
+  --orbit-text-title: 1.5rem;
+  --orbit-text-hint: .9rem;
+  --orbit-text-small: .8rem;
+
+  --orbit-focus: 0 0 0 .2rem rgba(78, 115, 223, .45);
+}
+
+.orbit-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--orbit-space-3) var(--orbit-space-4);
+  margin-bottom: var(--orbit-space-5);
+  padding-bottom: var(--orbit-space-3);
+  border-bottom: 1px solid var(--orbit-line);
+}
+.orbit-page-header > div:first-child { min-width: 0; flex: 1 1 18rem; }
+.orbit-page-title { font-size: var(--orbit-text-title); font-weight: 700; line-height: 1.25; margin: 0; }
+.orbit-page-title small { font-size: .55em; font-weight: 600; margin-left: var(--orbit-space-2); }
+.orbit-page-header .page-hint { font-size: var(--orbit-text-hint); margin: var(--orbit-space-1) 0 0; max-width: 46rem; }
+
+.orbit-page-actions { display: flex; flex-wrap: wrap; gap: var(--orbit-space-2); align-items: center; }
+
+.orbit-page-header a:focus-visible,
+.orbit-focusable:focus-visible { outline: none; box-shadow: var(--orbit-focus); border-radius: var(--orbit-radius); }
+
+@media (max-width: 575.98px) {
+  :root { --orbit-text-title: 1.3rem; }
+  .orbit-page-header { margin-bottom: var(--orbit-space-4); }
+}
+
+.orbit-section-title { font-size: 1rem; font-weight: 700; margin: 0 0 var(--orbit-space-3); }
+a.orbit-next-card { display: block; height: 100%; color: inherit; text-decoration: none; transition: box-shadow .15s ease; }
+a.orbit-next-card:hover { color: inherit; text-decoration: none; box-shadow: 0 .5rem 1.5rem rgba(58, 59, 69, .22) !important; }
+a.orbit-next-card:focus-visible { outline: none; box-shadow: var(--orbit-focus) !important; }
+a.orbit-next-card .card-body { padding: var(--orbit-space-4) 1.25rem; }
+.orbit-announce .custom-select { max-width: 11rem; }
+@media (max-width: 575.98px) {
+
+  .orbit-announce .input-group { flex-wrap: wrap; }
+  .orbit-announce .input-group-prepend { width: 100%; margin-bottom: var(--orbit-space-2); }
+  .orbit-announce .custom-select { max-width: none; width: 100%; border-radius: var(--orbit-radius) !important; }
+  .orbit-announce .form-control { border-top-left-radius: var(--orbit-radius) !important; border-bottom-left-radius: var(--orbit-radius) !important; }
+}

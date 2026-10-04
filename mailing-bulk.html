@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="stylesheet" href="assets/css/orbit-ui.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Send email</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="orbit-page-header">
+            <div>
+            <h3 class="text-dark mb-0 orbit-page-title">Send email</h3>
+            <p class="text-muted mb-0 page-hint">Write one message and send it to everyone on a contact list. Send yourself a test first.</p>
+          </div>
+          </div>
+          <div id="msg"></div>
+          <div class="row">
+            <div class="col-lg-7">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Write the e-mail</h6></div>
+                <div class="card-body">
+                  <form id="mail-form" novalidate>
+                    <div class="form-group">
+                      <label class="font-weight-bold" for="m-list"><i class="fas fa-list mr-1"></i> Mailing list</label>
+                      <select id="m-list" class="form-control custom-select"><option value="">Loading&hellip;</option></select>
+                      <small class="form-text text-muted">Lists are made on the <a href="mailing-list.html">Contact lists</a> page.</small>
+                    </div>
+                    <div class="form-group">
+                      <label class="font-weight-bold" for="m-subject">Subject</label>
+                      <input type="text" id="m-subject" class="form-control" maxlength="150" placeholder="Subject line">
+                    </div>
+                    <div class="form-group">
+                      <label class="font-weight-bold" for="m-title">E-mail title</label>
+                      <input type="text" id="m-title" class="form-control" maxlength="150" placeholder="Big heading inside the e-mail">
+                    </div>
+                    <div class="form-group">
+                      <label class="font-weight-bold" for="m-body">Message</label>
+                      <textarea id="m-body" class="form-control" rows="8" maxlength="20000" placeholder="Write your message. A blank line starts a new paragraph. Web addresses become links."></textarea>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label class="font-weight-bold" for="m-btn-label">Button label</label>
+                        <input type="text" id="m-btn-label" class="form-control" maxlength="40">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label class="font-weight-bold" for="m-btn-url">Button link</label>
+                        <input type="url" id="m-btn-url" class="form-control" maxlength="1000" placeholder="https://...">
+                      </div>
+                    </div>
+                    <small class="form-text text-muted mb-3">Leave the button link empty for an e-mail without a button.</small>
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label class="font-weight-bold" for="m-logo">Logo image link (optional)</label>
+                        <input type="url" id="m-logo" class="form-control" maxlength="1000" placeholder="https://.../logo.png">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label class="font-weight-bold" for="m-cover">Cover image link (optional)</label>
+                        <input type="url" id="m-cover" class="form-control" maxlength="1000" placeholder="https://.../poster.jpg">
+                      </div>
+                    </div>
+                    <small class="form-text text-muted mb-3">Images must be public web addresses (for example a file in the <code>certificates</code> bucket or on GitHub Pages). E-mail programs cannot show files from your computer.</small>
+                    <div class="d-flex flex-wrap align-items-center">
+                      <button type="button" class="btn btn-outline-primary mr-2 mb-2" id="test-btn"><i class="fas fa-vial mr-1"></i> Send a test to me</button>
+                      <button type="submit" class="btn btn-primary mr-2 mb-2" id="send-btn"><i class="fas fa-paper-plane mr-1"></i> Send to the list</button>
+                      <button type="button" class="btn btn-danger mb-2" id="stop-btn" style="display:none"><i class="fas fa-stop mr-1"></i> Stop</button>
+                    </div>
+                  </form>
+                  <div id="progress-box" class="mt-3" style="display:none">
+                    <div class="progress"><div class="progress-bar" id="progress-bar" role="progressbar" style="width:0%">0%</div></div>
+                    <p class="small text-muted mt-2 mb-0" id="progress-text"></p>
+                  </div>
+                  <div id="result" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Preview</h6></div>
+                <div class="card-body p-2">
+                  <iframe id="preview" title="E-mail preview" sandbox style="width:100%;height:560px;border:1px solid #e3e6f0;background:#fff"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/mailing-bulk.js"></script>
+</body>
+</html>

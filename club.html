@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="stylesheet" href="assets/css/orbit-ui.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Club: members and positions</title>
+</head>
+<body id="page-top" style="visibility:hidden">
+  <div id="wrapper">
+    <div id="rems-sidebar"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+      <div id="content">
+        <div id="rems-topbar"></div>
+        <div class="container-fluid">
+          <div class="orbit-page-header">
+            <div>
+            <h3 class="text-dark mb-0 orbit-page-title">Members &amp; positions <small class="text-muted" id="club-name"></small></h3>
+            <p class="text-muted mb-0 page-hint">Add people to the club, give them positions, and organise teams.</p>
+          </div>
+          </div>
+          <div id="msg"></div>
+
+          <ul class="nav nav-tabs mb-3" role="tablist">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab-members">Members</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-positions">Positions</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-teams">Teams</a></li>
+          </ul>
+          <div class="tab-content">
+
+            <div class="tab-pane fade show active" id="tab-members">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                  <h6 class="text-primary m-0 font-weight-bold">Members</h6>
+                  <input type="search" id="m-filter" class="form-control form-control-sm w-50" placeholder="Search name, e-mail, team">
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm table-striped my-0">
+                      <thead><tr><th>Name</th><th>Team</th><th>Positions</th><th>Status</th><th></th></tr></thead>
+                      <tbody id="m-body"><tr><td colspan="5" class="text-muted">Loading&hellip;</td></tr></tbody>
+                    </table>
+                  </div>
+                  <small class="text-muted" id="m-info"></small>
+                </div>
+              </div>
+              <div class="card shadow mb-4" id="m-add-card">
+                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Add a member</h6></div>
+                <div class="card-body">
+                  <form id="m-add" class="form-inline" novalidate>
+                    <input type="email" id="m-email" class="form-control mr-2 mb-2" placeholder="member@iist.ac.in" required>
+                    <select id="m-team" class="form-control mr-2 mb-2"></select>
+                    <button class="btn btn-primary mb-2" type="submit">Add</button>
+                  </form>
+                  <small class="text-muted">The person must already have an account (they sign up with their institute e-mail).</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-positions">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Positions and who holds them</h6></div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm table-striped my-0">
+                      <thead><tr><th>Level</th><th>Position</th><th>Holders</th><th></th></tr></thead>
+                      <tbody id="p-body"><tr><td colspan="4" class="text-muted">Loading&hellip;</td></tr></tbody>
+                    </table>
+                  </div>
+                  <small class="text-muted">Level 1 is the top. You can only act on positions below your own level, and only hand out permissions you hold.</small>
+                </div>
+              </div>
+              <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Appoint or hand over</h6></div>
+                <div class="card-body">
+                  <form id="a-form" novalidate>
+                    <div class="form-row">
+                      <div class="form-group col-md-4"><label for="a-email">Person's e-mail</label><input type="email" id="a-email" class="form-control" required></div>
+                      <div class="form-group col-md-4"><label for="a-pos">Position</label><select id="a-pos" class="form-control"></select></div>
+                      <div class="form-group col-md-4"><label for="a-team">Team (team positions only)</label><select id="a-team" class="form-control"></select></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2" id="a-appoint">Appoint</button>
+                    <button type="button" class="btn btn-outline-danger" id="a-handover">Hand over (replaces the current holder)</button>
+                  </form>
+                </div>
+              </div>
+              <div class="card shadow mb-4" id="pe-card">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                  <h6 class="text-primary m-0 font-weight-bold" id="pe-title">New position</h6>
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="pe-std">Add standard positions</button>
+                </div>
+                <div class="card-body">
+                  <form id="pe-form" novalidate>
+                    <div class="form-row">
+                      <div class="form-group col-md-5"><label for="pe-name">Title</label><input type="text" id="pe-name" class="form-control" maxlength="80" required></div>
+                      <div class="form-group col-md-3"><label for="pe-level">Level (2 to 20)</label><input type="number" id="pe-level" class="form-control" min="2" max="20" value="5"></div>
+                      <div class="form-group col-md-4"><label for="pe-scope">Applies to</label>
+                        <select id="pe-scope" class="form-control"><option value="club">Whole club</option><option value="team">One team</option></select></div>
+                    </div>
+                    <div class="form-group"><label>Permissions</label><div id="pe-perms"></div>
+                      <small class="text-muted">You can only tick permissions you hold yourself.</small></div>
+                    <button type="submit" class="btn btn-primary mr-2" id="pe-save">Save position</button>
+                    <button type="button" class="btn btn-outline-secondary" id="pe-reset">Clear</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-teams">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Teams and wings</h6></div>
+                <div class="card-body">
+                  <ul class="list-group mb-3" id="t-list"></ul>
+                  <form id="t-add" class="form-inline" novalidate>
+                    <input type="text" id="t-name" class="form-control mr-2 mb-2" maxlength="80" placeholder="New team name" required>
+                    <button class="btn btn-primary mb-2" type="submit">Add team</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="rems-footer"></div>
+    </div>
+  </div>
+  <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/club.js"></script>
+</body>
+</html>

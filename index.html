@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head id="head_tag">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="600x600" href="assets/img/Logo_White.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0B4444">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&display=swap">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="stylesheet" href="assets/css/orbit-ui.css">
+  <script src="assets/js/dark-mode.js"></script>
+  <title>Certificate Distribution System (CDS)</title>
+</head>
+<body class="bg-gradient-primary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-9 col-lg-12 col-xl-10">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+          <div class="card-body p-0">
+            <div class="row">
+              <div class="col-lg-6 d-none d-lg-flex">
+                <div class="flex-grow-1 bg-password-image" style="background-image: url('assets/img/front/image2.png');"></div>
+              </div>
+              <div class="col-lg-6">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h6 class="text-dark mb-2" id="org-tagline">&nbsp;</h6>
+                    <h4 class="text-dark mb-2">Certificate Distribution System (CDS)</h4>
+                    <p class="mb-4">We're here to make your life much easier. Just enter the event name and watch the magic happen!</p>
+                  </div>
+                  <form class="user" id="event-form">
+                    <div class="form-group">
+                      <input class="form-control form-control-user" type="text" placeholder="Enter Event Name..." name="event" id="event-input" maxlength="200" autocomplete="off" required>
+                    </div>
+                    <button class="btn btn-primary btn-block text-white btn-user" type="submit" id="search-btn">Search Event</button>
+                  </form>
+
+                  <div id="msg" class="text-center mt-3" aria-live="polite"></div>
+
+                  <div class="text-center mt-3">
+                    <div class="alert alert-info small" role="alert">
+                      <i class="fas fa-lightbulb mr-2"></i>
+                      <strong>Tip:</strong> Try searching with the exact event name as announced. Names are case-insensitive.
+                    </div>
+                  </div>
+                  <div class="text-center"><hr></div>
+                  <div class="text-center"><a class="small" href="cds-public.html?mode=1">Don't Know the Event Name? Click here.</a></div>
+                  <div class="text-center"><a class="small" href="login.html">Are you a member? Login!</a></div>
+                </div>
+                <div class="text-center"><p class="small"><strong>ClubOrbit</strong> by IIST-OSS</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="js/pages/home.js"></script>
+</body>
+</html>
