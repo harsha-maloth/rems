@@ -64,6 +64,9 @@
     /** True when the selected club grants this permission (same answer the database gives). */
     can: function (perm) { return !!REMS.club && REMS.club.perms.indexOf(perm) !== -1; },
 
+    /** True when the person holds at least one current position in the selected club (wing leads included). */
+    holder: function () { return !!REMS.club && REMS.club.titles.length > 0; },
+
     /** Id of the selected club, for the club_id column of anything a page creates. */
     clubId: function () { return REMS.club ? REMS.club.id : null; },
 
@@ -100,6 +103,7 @@
      *   perm:  permission the selected club must grant (e.g. 'mail.send')
      *   admin: platform admin only (profiles.is_admin)
      *   univ:  university admin only (university_admins table)
+     *   holder: holds any current position in the selected club
      * Resolves with the profile; REMS.club / REMS.clubs are loaded by then.
      */
     requireAuth: async function (opts) {
@@ -120,7 +124,7 @@
       await REMS.loadClubs();
       REMS.univ = false;
       try { var u = await sb.rpc('is_university_admin'); REMS.univ = !u.error && u.data === true; } catch (e) {}
-      if ((opts.admin && !p.data.is_admin) || (opts.perm && !REMS.can(opts.perm)) || (opts.univ && !REMS.univ)) {
+      if ((opts.admin && !p.data.is_admin) || (opts.perm && !REMS.can(opts.perm)) || (opts.univ && !REMS.univ) || (opts.holder && !REMS.holder())) {
         location.replace('bad-request.html');
         throw new Error('forbidden');
       }
@@ -185,6 +189,9 @@
 '    <ul class="nav navbar-nav text-light" id="accordionSidebar">' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i><span>&nbsp;Dashboard</span></a></li>' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" href="student.html"><i class="fas fa-user-graduate"></i><span>&nbsp;Student portal</span></a></li>' +
+'      <hr class="sidebar-divider">' +
+'      <div class="sidebar-heading"><p class="mb-0">Club</p></div>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-holder="1" href="club.html"><i class="fas fa-sitemap"></i><span>&nbsp;Members &amp; positions</span></a></li>' +
 '      <hr class="sidebar-divider">' +
 '      <div class="sidebar-heading"><p class="mb-0">Media &amp; marketing</p></div>' +
 '      <li class="nav-item" role="presentation">' +
@@ -252,6 +259,9 @@
     if (!nav) return;
     Array.prototype.forEach.call(nav.querySelectorAll('a[data-perm]'), function (a) {
       if (!REMS.can(a.getAttribute('data-perm'))) a.style.display = 'none';
+    });
+    Array.prototype.forEach.call(nav.querySelectorAll('a[data-holder]'), function (a) {
+      if (!REMS.holder()) a.style.display = 'none';
     });
     Array.prototype.forEach.call(nav.querySelectorAll('a[data-univ]'), function (a) {
       if (!REMS.univ) a.style.display = 'none';
