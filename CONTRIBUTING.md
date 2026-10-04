@@ -11,7 +11,7 @@ Add `http://localhost:8000/change-password.html` to the Supabase redirect URLs t
 
 ## Ground rules
 - **Never commit secrets.** Only the Supabase anon key belongs in `js/config.js`. The `service_role` key and the SMTP password must never appear in the repository.
-- Row Level Security is the only protection for data. A change that touches a table needs a new numbered file in `supabase/migrations/`, never an edit to an old one. Access questions go through `has_perm(club_id, permission)`; run `supabase/tests/phase1_two_clubs.sql` before opening the pull request and add a check for any new club-scoped table.
+- Row Level Security is the only protection for data. A change that touches a table needs a new numbered file in `supabase/migrations/`, never an edit to an old one. Access questions go through `has_perm(club_id, permission)`; run `supabase/tests/phase1_two_clubs.sql` and `supabase/tests/phase2_students.sql` before opening the pull request and add a check for any new club-scoped table.
 - Keep the copyright lines in `LICENSE` (MIT requires it).
 - No build step: plain HTML, CSS and JavaScript. Keep it that way so clubs can fork and deploy by pushing.
 

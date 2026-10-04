@@ -5,9 +5,9 @@ Any IIST club can run its own ClubOrbit. You need a GitHub account and a free Su
 1. **Fork** this repository (or use it as a template) under your club's GitHub account.
 2. **Create a Supabase project** at supabase.com. Use a club account, not a personal one, and add a second maintainer.
 3. **Run the database setup.** In the Supabase SQL Editor run, in order:
-   `supabase/migrations/0001_init.sql`, `0002_hide_certificate_emails.sql`, `0003_admin_list_columns.sql`, `0004_mail_and_short_links.sql`, `0005_multi_club_foundation.sql`.
-4. **Turn off public sign-ups:** Authentication -> Sign In / Providers -> Email -> disable "Allow new users to sign up".
-5. **Add the first admin:** Authentication -> Users -> Add user (tick Auto confirm), then in the SQL Editor make that account platform admin and president of the starting club (rename the club later in the `clubs` table):
+   `supabase/migrations/0001_init.sql`, `0002_hide_certificate_emails.sql`, `0003_admin_list_columns.sql`, `0004_mail_and_short_links.sql`, `0005_multi_club_foundation.sql`, `0006_student_identity.sql`.
+4. **Sign-ups:** with `0006` applied you may turn "Allow new users to sign up" ON (the database only accepts admitted students and invited staff). Keep "Confirm email" ON. Set the institute domain if it is not `iist.ac.in` (see the README).
+5. **Add the first admin:** in the SQL Editor run `select public.invite_staff('you@example.com');`, then Authentication -> Users -> Add user (tick Auto confirm), then make that account platform admin and president of the starting club (rename the club later in the `clubs` table):
    ```sql
    update public.profiles set is_admin = true, login_name = 'admin' where email = 'you@example.com';
    select public.appoint_president((select id from public.clubs where slug = 'main'), 'you@example.com');
@@ -19,6 +19,6 @@ Any IIST club can run its own ClubOrbit. You need a GitHub account and a free Su
 10. **Fix the short-link path:** in `404.html` set `var REPO = 'your-repo-name';`.
 11. **Optional mail:** follow "Mail and short links" in the README to deploy the `send-bulk-mail` Edge Function and add the SMTP secrets.
 
-Test before announcing: run `supabase/tests/phase1_two_clubs.sql` (it must end with `ALL CHECKS PASSED`), then log in, reset a password, generate a certificate, send a test mail, open a short link.
+Test before announcing: run `supabase/tests/phase1_two_clubs.sql` and `supabase/tests/phase2_students.sql` (both must end with `ALL CHECKS PASSED`), then log in, reset a password, generate a certificate, send a test mail, open a short link.
 
 To add more clubs on the same copy: `select public.create_club('Name', 'slug');` then `select public.appoint_president(<id>, 'email');`. The Edge Function `send-bulk-mail` changed in 0005's release: redeploy it from `supabase/functions/send-bulk-mail/index.ts`.

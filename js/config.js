@@ -12,6 +12,6 @@ window.REMS_CONFIG = {
   APP_TAGLINE: "One orbit for everything your club does.",
   ORG_NAME: "IIST",
   ORG_TAGLINE: "Indian Institute of Space Science and Technology",
-  APP_VERSION: "3.1.0",
+  APP_VERSION: "3.2.0",
   REPO_URL: "https://github.com/iist-oss/club-orbit"
 };

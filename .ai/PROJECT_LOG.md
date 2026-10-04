@@ -17,7 +17,7 @@ Turn it from a single-admin tool into a multi-club platform: the unit is the **s
 |---|---|---|---|
 | 0 | Current tools, rebrand | n/a | Done |
 | 1 | Multi-club foundation: clubs, teams, positions, memberships, position_terms, audit_log, `has_perm`, `club_id` on existing tables, rewritten policies, club switcher | Club A user cannot read/edit/mail anything of Club B (two clubs, two accounts) | **Done** (see log) |
-| 2 | Student identity and portal: institute-email sign-up, admitted-list import and claim, profile, club directory, my clubs, my certificates | New student claims account, completes profile, sees all their certificates, no admin help | Planned |
+| 2 | Student identity and portal: institute-email sign-up, admitted-list import and claim, profile, club directory, my clubs, my certificates | New student claims account, completes profile, sees all their certificates, no admin help | **Built; awaiting owner's live check** (see log) |
 | 3 | Club portal and hierarchy: position editor, role templates, appoint/handover/end terms, teams, member list | President creates wing lead; wing lead sees only their wing; handover in one step | Planned |
 | 4 | Intake and recruitment: club-defined forms, rounds, scoring, shortlist, offers, auto mail | One club runs a 100-applicant drive and exports scored list | Planned |
 | 5 | Events, attendance, tasks: event lifecycle, QR attendance, certificates to present, tasks, announcements | Event end to end: register, attend, certificate in student portal | Planned |
@@ -26,14 +26,15 @@ Turn it from a single-admin tool into a multi-club platform: the unit is the **s
 | 8 | Hardening: privacy review, export/deletion, backup restore drill, accessibility, phone layout, load test | Restore works; independent reviewer cannot read another club's data | Planned |
 
 ### Open decisions (from the plan, still unanswered unless noted in the log)
-Scope (IIST only vs other institutes), sign-in (institute email+password vs Google), who supplies the admitted student list, hierarchy depth (fixed vs any), approvals (institute approves events/budgets or only views), pilot clubs, hosting (GitHub Pages+Supabase vs institute servers).
+**Answered 2026-10-04:** scope = IIST only; sign-in = institute email + password; the institute supplies the admitted list (a university admin imports it). Still open: hierarchy depth (fixed vs any), approvals (institute approves events/budgets or only views), pilot clubs, hosting (GitHub Pages+Supabase vs institute servers).
 
 ### Known risks
 DPDP Act 2023 for student data; access rules must always go through `has_perm` + RLS; Supabase free-tier limits; few maintainers; institute buy-in; do not build everything at once (finish a phase for a real club first).
 
 ## 3. Repo map
 - `*.html` pages at root; shared runtime `js/app.js` (Supabase client, `requireAuth`, club state, sidebar/topbar injection); per-page logic in `js/pages/*.js`; config in `js/config.js` (anon key is public by design).
-- `supabase/migrations/000N_*.sql`: numbered, **never edit an old one**, add a new file. `supabase/functions/send-bulk-mail/index.ts`. `supabase/tests/phase1_two_clubs.sql`: isolation test.
+- `supabase/migrations/000N_*.sql`: numbered, **never edit an old one**, add a new file. `supabase/functions/send-bulk-mail/index.ts`. `supabase/tests/phase1_two_clubs.sql` (club isolation) and `phase2_students.sql` (student identity): both must end with `ALL CHECKS PASSED`.
+- Student pages: `signup.html` (claim account), `student.html` (student portal), `university-students.html` (import and browse the admitted list); scripts in `js/pages/`.
 - Deploy: `.github/workflows/pages.yml` publishes everything except `.git`, `.github`, `supabase`, `.ai`, `CLAUDE.md`.
 - Docs: `README.md`, `docs/deploy-your-own-club.md`, `CONTRIBUTING.md`, `SECURITY.md`.
 
@@ -46,9 +47,12 @@ DPDP Act 2023 for student data; access rules must always go through `has_perm` +
 6. Event names, form slugs, short-link slugs stay globally unique (public links identify them by text).
 7. Certificate storage paths are `<club_id>/<event-slug>/<run-id>/Certificate-N.png` and `<club_id>/_templates/...`.
 8. No build step, no secrets in the repo.
+9. Account creation is gated in the database (`signup_gate` on `auth.users`): an e-mail must be on the `students` list (unclaimed, status applicant/student) or in `signup_invites`. Staff must be invited with `invite_staff()` before being created in the dashboard. Keep "Confirm email" ON.
+10. `students` is written only by `import_students()` (university admin) and read by the owner of the row or a university admin. Platform admins do not read it. Certificate lookup by e-mail goes through `my_certificates()` only.
+11. The institute e-mail domain lives in `app_settings` (`institute_email_domain`, default `iist.ac.in`, an assumption: confirm it).
 
 ## 5. How to test
-- Database: need Postgres 16. Create stub roles `anon`/`authenticated`, `auth.users`, `auth.uid()`, `storage.buckets/objects` (see how the Phase 1 session did it: a stubs SQL file), apply migrations 0001 to latest, then run `supabase/tests/phase1_two_clubs.sql`; it must end with `ALL CHECKS PASSED`. On real Supabase just run the test in the SQL Editor (it rolls back).
+- Database (both test files, in order): need Postgres 16. Create stub roles `anon`/`authenticated`, `auth.users`, `auth.uid()`, `storage.buckets/objects` (see how the Phase 1 session did it: a stubs SQL file), apply migrations 0001 to latest, then run `supabase/tests/phase1_two_clubs.sql`; it must end with `ALL CHECKS PASSED`. On real Supabase just run the test in the SQL Editor (it rolls back).
 - Front end: serve with `python3 -m http.server 8000`; Playwright + Chromium were used with a mocked `supabase` object to check switcher, nav filtering, guards and `club_id` scoping.
 - Mutation-check new tests: break a policy on purpose and confirm the test fails.
 
@@ -71,3 +75,23 @@ Format: `### YYYY-MM-DD: title`, then what was asked, what changed (files), how 
 
 ### 2026-10-04: Added this log and CLAUDE.md
 - Owner asked for the history to live in the repo so future sessions need no briefing, and for it to be updated automatically. Added `.ai/PROJECT_LOG.md` and `CLAUDE.md` (standing rule: read the log first, update it after every task). Excluded both from the Pages deploy.
+
+### 2026-10-04: Phase 1 confirmed on the real Supabase project
+- Owner reported that `supabase/tests/phase1_two_clubs.sql` succeeded on the live Supabase project, so migration 0005 is applied there. (Owner's wording was "test got as success"; the exact `ALL CHECKS PASSED` line was not pasted.)
+- Code state on GitHub: `main` already contained all Phase 1 files (the repo's single "Initial commit" e414ad5). PR #2 (`add-ai-project-log`) adds only `.ai/PROJECT_LOG.md`, `CLAUDE.md` and the Pages-deploy exclusions.
+- Still unconfirmed: `send-bulk-mail` redeployed with the new `club_id`/`has_perm` check; a real certificate upload to the new `<club_id>/` storage paths; a real login showing the club switcher.
+- Next: Phase 2 (student identity and portal). Needs owner answers on: sign-in method (institute email+password vs Google), who supplies the admitted student list, single institute vs multi-institute.
+
+### 2026-10-04: Phase 1 manual checks passed
+- Owner confirmed on the live site: club switcher and permission-filtered menu work, `send-bulk-mail` redeployed and test mail works, certificate generation works with the new `<club_id>/` storage paths. Phase 1 is fully verified; the "unconfirmed" items above are closed.
+- Next: Phase 2 (student identity and portal), pending owner answers on sign-in method, student list source, single vs multi-institute.
+
+### 2026-10-04: Platform Phase 2, student identity and portal (v3.2.0)
+- **Owner decisions:** institute email + password sign-in; the institute will supply the admitted list; IIST only. The email domain `iist.ac.in` is my assumption (not stated by the owner): confirm and change `app_settings` if wrong.
+- **Added** `supabase/migrations/0006_student_identity.sql`: `app_settings`, `institute_domain()`, `university_admins` (+ `is_university_admin`, `add_university_admin`, audited), `students` (validated by trigger, read-only to clients), `signup_invites` + `invite_staff()`, `signup_gate` trigger on `auth.users`, `handle_new_user` now links the profile to the student row (status applicant becomes student), `can_claim(email)` (anon, yes/no), `import_students(jsonb)` (university admin, max 1000 rows per call, per-row errors, one audit row), `my_certificates()`, `club_directory()`, `complete_my_profile()`.
+- **Added** `supabase/tests/phase2_students.sql`; updated `phase1_two_clubs.sql` to invite its accounts first.
+- **Front end:** `signup.html`/`signup.js`, `student.html`/`student.js`, `university-students.html`/`university-students.js`, `assets/Sample_students.csv`; `app.js` gets `REMS.univ`, `requireAuth({univ:true})`, "Student portal" and "University" sidebar entries; club-less students are redirected from the dashboard to the student portal; login placeholder and sign-up link updated; README/deploy docs; `APP_VERSION` 3.2.0.
+- **Verified:** migrations 0001 to 0006 apply on Postgres 16; both test files pass; four deliberate breakages of the phase 2 rules (gate removed, students readable by all, my_certificates unscoped, import open to everyone) were each caught; Chromium smoke test with a mocked Supabase (sign-up validation and messages, student portal, club-less redirect, university import with a semicolon-separated CSV, rejected rows, search filter, XSS-style cell content stays text, non-university admin redirected).
+- **Not verified:** the real Supabase (0006 not yet run by the owner); a real sign-up with a real confirmation e-mail and the redirect to `login.html`; the Supabase setting that public sign-ups be ON while the gate holds on the hosted `auth.users` (hosted Supabase allows the trigger, but confirm by trying an unlisted e-mail).
+- **Known gaps / risks:** (1) `can_claim` tells an anonymous caller whether an institute e-mail is on the admitted list (needed for good error messages; low risk, no rate limit). (2) Pre-hijack: someone can start a sign-up with a classmate's e-mail; Confirm-email ON limits it, and the real owner signing up again replaces the password. (3) `email_for_username` still public. (4) Gate means dashboard "Add user" fails for non-invited e-mails (documented). (5) No automatic status changes yet (alumni/withdrawn is Phase 7); no student self-service for institute data. (6) Students cannot apply to clubs yet (Phase 4); the portal says so.
+- **Owner must do to deploy:** run 0006; run both test files; in Supabase Authentication turn ON "Allow new users to sign up", keep Confirm email ON, add the `login.html` URL to Redirect URLs; make a university admin: `select public.add_university_admin('<email of an existing account>');`; confirm the email domain.

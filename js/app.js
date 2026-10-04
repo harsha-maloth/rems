@@ -45,6 +45,7 @@
     profile: null,
     clubs: [],            // clubs the person belongs to: { id, slug, name, status, titles[], perms[] }
     club: null,           // the selected club (what every page works on)
+    univ: false,          // true for university admins (may import and read the student list)
     DEFAULT_AVATAR: 'assets/img/avatars/image2.png',
 
     configured: function () { return !!sb; },
@@ -98,6 +99,7 @@
      * Redirect away unless signed in. Options:
      *   perm:  permission the selected club must grant (e.g. 'mail.send')
      *   admin: platform admin only (profiles.is_admin)
+     *   univ:  university admin only (university_admins table)
      * Resolves with the profile; REMS.club / REMS.clubs are loaded by then.
      */
     requireAuth: async function (opts) {
@@ -116,7 +118,9 @@
       }
       REMS.profile = p.data;
       await REMS.loadClubs();
-      if ((opts.admin && !p.data.is_admin) || (opts.perm && !REMS.can(opts.perm))) {
+      REMS.univ = false;
+      try { var u = await sb.rpc('is_university_admin'); REMS.univ = !u.error && u.data === true; } catch (e) {}
+      if ((opts.admin && !p.data.is_admin) || (opts.perm && !REMS.can(opts.perm)) || (opts.univ && !REMS.univ)) {
         location.replace('bad-request.html');
         throw new Error('forbidden');
       }
@@ -180,6 +184,7 @@
 '    <hr class="sidebar-divider my-0">' +
 '    <ul class="nav navbar-nav text-light" id="accordionSidebar">' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i><span>&nbsp;Dashboard</span></a></li>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" href="student.html"><i class="fas fa-user-graduate"></i><span>&nbsp;Student portal</span></a></li>' +
 '      <hr class="sidebar-divider">' +
 '      <div class="sidebar-heading"><p class="mb-0">Media &amp; marketing</p></div>' +
 '      <li class="nav-item" role="presentation">' +
@@ -192,6 +197,9 @@
 '      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="form.manage" href="forms-generator.html"><i class="fab fa-wpforms"></i><span>&nbsp;Form Generator</span></a></li>' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="link.manage" href="link-short.html"><i class="fas fa-link"></i><span>&nbsp;Link Shortner</span></a></li>' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="form.manage" href="forms-registrations.html"><i class="fa fa-eye"></i><span>&nbsp;View Registration</span></a></li>' +
+'      <hr class="sidebar-divider">' +
+'      <div class="sidebar-heading"><p class="mb-0">University</p></div>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-univ="1" href="university-students.html"><i class="fas fa-id-card"></i><span>&nbsp;Student list</span></a></li>' +
 '      <hr class="sidebar-divider">' +
 '      <div class="sidebar-heading"><p class="mb-0">Platform admin</p></div>' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" data-platform="1" href="db-manage.html"><i class="fas fa-database"></i><span>&nbsp;Maintenance</span></a></li>' +
@@ -244,6 +252,9 @@
     if (!nav) return;
     Array.prototype.forEach.call(nav.querySelectorAll('a[data-perm]'), function (a) {
       if (!REMS.can(a.getAttribute('data-perm'))) a.style.display = 'none';
+    });
+    Array.prototype.forEach.call(nav.querySelectorAll('a[data-univ]'), function (a) {
+      if (!REMS.univ) a.style.display = 'none';
     });
     var platform = !!(REMS.profile && REMS.profile.is_admin);
     Array.prototype.forEach.call(nav.querySelectorAll('a[data-platform]'), function (a) {
