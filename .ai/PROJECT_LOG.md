@@ -101,3 +101,8 @@ Format: `### YYYY-MM-DD: title`, then what was asked, what changed (files), how 
 - **Security finding on the live DB:** `phase1_two_clubs.sql` failed at "anon reads certificate e-mails". The live `certificates.email` column was still SELECT-able by `anon` (0002's revoke had evidently not taken effect there). Fixed by hand in the SQL Editor: `revoke select on public.certificates from public, anon, authenticated;` then re-granted the column list `(id, name, regno, dept, year, section, position, cert_link, event_name, college, club_id)` to `anon, authenticated`. Re-check showed no anon/authenticated SELECT on `email`. This fix is NOT in a migration file; a fresh deploy gets it from 0002 + 0005, but a future migration could repeat it idempotently.
 - Not changed: `anon` still holds INSERT/UPDATE column grants from Supabase defaults; RLS blocks the writes and the Phase 1 test checks this.
 - Phase 2 is now complete. Next: Phase 3 (club portal and hierarchy). Open decisions still unanswered: hierarchy depth, approvals, pilot clubs, hosting.
+
+### 2026-10-04: Phase 3 verified on the live site
+- Owner completed the live checklist on the deployed site (sidebar entry, positions list, teams, appointing a Vice President and a Wing Lead, wing lead scoped to their team, handover of a low position, existing tools and club switcher unaffected) and reported "done". Individual results were not pasted.
+- Phase 3 is complete. Next: Phase 4 (intake and recruitment: club-defined forms, rounds, scoring, shortlist, offers, auto mail). Exit test: one club runs a 100-applicant drive and exports a scored list.
+- Open decisions still unanswered: approvals (does the institute approve events and budgets or only view them), pilot clubs, hosting.
