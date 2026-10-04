@@ -3,7 +3,7 @@
  */
 (async function () {
   'use strict';
-  document.title = 'Bulk Mailer: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Send email: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ perm: 'mail.send' }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';

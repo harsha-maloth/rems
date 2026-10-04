@@ -168,7 +168,7 @@
         change_mode(localStorage.getItem('rems.theme') === 'dark' ? 'dark' : 'light');
       }
       var nav = document.getElementById('navbar');
-      if (nav && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) nav.classList.add('toggled');
+      if (nav && window.matchMedia && window.matchMedia('(max-width: 767px)').matches) nav.classList.add('toggled');
 
       var out = document.getElementById('rems-logout');
       if (out) out.addEventListener('click', function (e) { e.preventDefault(); REMS.logout(); });
@@ -187,29 +187,28 @@
 '    </a>' +
 '    <hr class="sidebar-divider my-0">' +
 '    <ul class="nav navbar-nav text-light" id="accordionSidebar">' +
-'      <li class="nav-item" role="presentation"><a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i><span>&nbsp;Dashboard</span></a></li>' +
-'      <li class="nav-item" role="presentation"><a class="nav-link" href="student.html"><i class="fas fa-user-graduate"></i><span>&nbsp;Student portal</span></a></li>' +
+'      <div class="sidebar-heading"><p class="mb-0">Home</p></div>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i><span>&nbsp;Club dashboard</span></a></li>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" href="student.html"><i class="fas fa-user-graduate"></i><span>&nbsp;My student portal</span></a></li>' +
 '      <hr class="sidebar-divider">' +
-'      <div class="sidebar-heading"><p class="mb-0">Club</p></div>' +
+'      <div class="sidebar-heading"><p class="mb-0">My club</p></div>' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" data-holder="1" href="club.html"><i class="fas fa-sitemap"></i><span>&nbsp;Members &amp; positions</span></a></li>' +
 '      <hr class="sidebar-divider">' +
-'      <div class="sidebar-heading"><p class="mb-0">Media &amp; marketing</p></div>' +
-'      <li class="nav-item" role="presentation">' +
-'        <a class="nav-link" data-perm="certificate.issue" href="cert-generate.html"><i class="fas fa-medal"></i><span>&nbsp;Certificate Generator</span></a>' +
-'        <a class="nav-link" data-perm="mail.send" href="mailing-bulk.html"><i class="fas fa-mail-bulk"></i><span>&nbsp;Bulk Mailer</span></a>' +
-'        <a class="nav-link" data-perm="mail.send" href="mailing-list.html"><i class="fas fa-list"></i><span>&nbsp;Update Mailing List</span></a>' +
-'      </li>' +
+'      <div class="sidebar-heading"><p class="mb-0">Events &amp; forms</p></div>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="form.manage" href="forms-generator.html"><i class="fab fa-wpforms"></i><span>&nbsp;Event forms</span></a></li>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="form.manage" href="forms-registrations.html"><i class="fas fa-eye"></i><span>&nbsp;Registrations</span></a></li>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="certificate.issue" href="cert-generate.html"><i class="fas fa-medal"></i><span>&nbsp;Issue certificates</span></a></li>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="link.manage" href="link-short.html"><i class="fas fa-link"></i><span>&nbsp;Short links</span></a></li>' +
 '      <hr class="sidebar-divider">' +
-'      <div class="sidebar-heading"><p class="mb-0">Events</p></div>' +
-'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="form.manage" href="forms-generator.html"><i class="fab fa-wpforms"></i><span>&nbsp;Form Generator</span></a></li>' +
-'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="link.manage" href="link-short.html"><i class="fas fa-link"></i><span>&nbsp;Link Shortner</span></a></li>' +
-'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="form.manage" href="forms-registrations.html"><i class="fa fa-eye"></i><span>&nbsp;View Registration</span></a></li>' +
+'      <div class="sidebar-heading"><p class="mb-0">Communicate</p></div>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="mail.send" href="mailing-list.html"><i class="fas fa-list"></i><span>&nbsp;Contact lists</span></a></li>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-perm="mail.send" href="mailing-bulk.html"><i class="fas fa-mail-bulk"></i><span>&nbsp;Send email</span></a></li>' +
 '      <hr class="sidebar-divider">' +
 '      <div class="sidebar-heading"><p class="mb-0">University</p></div>' +
 '      <li class="nav-item" role="presentation"><a class="nav-link" data-univ="1" href="university-students.html"><i class="fas fa-id-card"></i><span>&nbsp;Student list</span></a></li>' +
 '      <hr class="sidebar-divider">' +
-'      <div class="sidebar-heading"><p class="mb-0">Platform admin</p></div>' +
-'      <li class="nav-item" role="presentation"><a class="nav-link" data-platform="1" href="db-manage.html"><i class="fas fa-database"></i><span>&nbsp;Maintenance</span></a></li>' +
+'      <div class="sidebar-heading"><p class="mb-0">Admin</p></div>' +
+'      <li class="nav-item" role="presentation"><a class="nav-link" data-platform="1" href="db-manage.html"><i class="fas fa-database"></i><span>&nbsp;Platform tools</span></a></li>' +
 '      <hr class="sidebar-divider">' +
 '    </ul>' +
 '    <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>' +
@@ -296,10 +295,7 @@
 '  <div class="container-fluid">' +
 '    <button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>' +
 clubSwitcherHtml() +
-'    <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" onsubmit="return false">' +
-'      <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">' +
-'      <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div></div>' +
-'    </form>' +
+'    <div class="mr-auto"></div>' +
 '    <ul class="nav navbar-nav flex-nowrap ml-auto">' +
 '      <li class="nav-item dropdown no-arrow mx-1" role="presentation">' +
 '        <div class="toggle" id="mode_toggler">' +
@@ -314,7 +310,6 @@ clubSwitcherHtml() +
 '          <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">' + badge + '<i class="fas fa-bell fa-fw"></i></a>' +
 '          <div class="dropdown-menu dropdown-menu-right dropdown-list dropdown-menu-right animated--grow-in" role="menu">' +
 '            <h6 class="dropdown-header">alerts center</h6>' + alertList +
-'            <a class="text-center dropdown-item small text-gray-500" href="#">Show All Alerts</a>' +
 '          </div>' +
 '        </div>' +
 '      </li>' +

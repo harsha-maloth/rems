@@ -4,7 +4,7 @@
  */
 (async function () {
   'use strict';
-  document.title = 'Link Shortener: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Short links: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ perm: 'link.manage' }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';

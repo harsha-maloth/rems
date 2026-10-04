@@ -2,7 +2,7 @@
    so club data is only visible for clubs where this account also holds a position. */
 (async function () {
   'use strict';
-  document.title = 'Database Management: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Platform tools: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ admin: true }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';

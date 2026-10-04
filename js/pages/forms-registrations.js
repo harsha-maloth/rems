@@ -1,7 +1,7 @@
 /* View registrations (admin): browse answers for one form and export them as CSV. */
 (async function () {
   'use strict';
-  document.title = 'View Registrations: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Registrations: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ perm: 'form.manage' }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';
@@ -70,7 +70,7 @@
   $('per-page').value = perPage;
   $('per-page').addEventListener('change', function () { perPage = parseInt(this.value, 10); location.href = url(1); });
 
-  if (!forms.length) { flash('info', 'No forms yet. Create one on the Form Generator page.'); return; }
+  if (!forms.length) { flash('info', 'No forms yet. Create one on the Event forms page.'); return; }
   if (!slug) return;
   form = forms.filter(function (f) { return f.slug === slug; })[0];
   if (!form) { flash('warning', 'No form found for "' + slug + '".'); return; }

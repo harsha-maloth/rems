@@ -156,3 +156,5 @@
  ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+/* One-line "what this page is for" under each page title */
+.page-hint { font-size: .9rem; margin-top: .25rem; max-width: 46rem; }

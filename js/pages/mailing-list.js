@@ -3,7 +3,7 @@
  */
 (async function () {
   'use strict';
-  document.title = 'Mailing Lists: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
+  document.title = 'Contact lists: ' + (REMS.cfg.APP_NAME || REMS.cfg.ORG_NAME);
   try { await REMS.requireAuth({ perm: 'mail.send' }); } catch (e) { return; }
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';
