@@ -48,3 +48,18 @@
   :root { --orbit-text-title: 1.3rem; }
   .orbit-page-header { margin-bottom: var(--orbit-space-4); }
 }
+
+/* Dashboard (L2): section title and the "what would you like to do" cards */
+.orbit-section-title { font-size: 1rem; font-weight: 700; margin: 0 0 var(--orbit-space-3); }
+a.orbit-next-card { display: block; height: 100%; color: inherit; text-decoration: none; transition: box-shadow .15s ease; }
+a.orbit-next-card:hover { color: inherit; text-decoration: none; box-shadow: 0 .5rem 1.5rem rgba(58, 59, 69, .22) !important; }
+a.orbit-next-card:focus-visible { outline: none; box-shadow: var(--orbit-focus) !important; }
+a.orbit-next-card .card-body { padding: var(--orbit-space-4) 1.25rem; }
+.orbit-announce .custom-select { max-width: 11rem; }
+@media (max-width: 575.98px) {
+  /* announcement: kind on its own line, message and Post below it */
+  .orbit-announce .input-group { flex-wrap: wrap; }
+  .orbit-announce .input-group-prepend { width: 100%; margin-bottom: var(--orbit-space-2); }
+  .orbit-announce .custom-select { max-width: none; width: 100%; border-radius: var(--orbit-radius) !important; }
+  .orbit-announce .form-control { border-top-left-radius: var(--orbit-radius) !important; border-bottom-left-radius: var(--orbit-radius) !important; }
+}

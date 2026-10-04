@@ -25,71 +25,64 @@
         <div class="container-fluid">
           <div class="orbit-page-header">
             <div>
-              <h3 class="text-dark mb-0 orbit-page-title">Welcome!</h3>
+              <h3 class="text-dark mb-0 orbit-page-title" id="welcome-title">Welcome!</h3>
               <p class="text-muted mb-0 page-hint">Your club at a glance.</p>
             </div>
           </div>
+          <div id="msg"></div>
           <div class="row">
             <div class="col-md-6 col-xl-4 mb-4">
-              <div class="card shadow border-left-primary py-2"><div class="card-body"><div class="row align-items-center no-gutters">
+              <div class="card shadow border-left-primary py-2 h-100"><div class="card-body"><div class="row align-items-center no-gutters">
                 <div class="col mr-2">
-                  <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Registrations for <span id="latest-event"></span> (Latest)</span></div>
+                  <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Sign-ups for the latest event</span></div>
                   <div class="text-dark font-weight-bold h5 mb-0"><span id="stat-registrations">0</span></div>
+                  <div class="small text-muted text-truncate" id="latest-event-line">&nbsp;</div>
                 </div>
                 <div class="col-auto"><i class="fas fa-user-friends fa-2x text-gray-300"></i></div>
               </div></div></div>
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
-              <div class="card shadow border-left-success py-2"><div class="card-body"><div class="row align-items-center no-gutters">
+              <div class="card shadow border-left-success py-2 h-100"><div class="card-body"><div class="row align-items-center no-gutters">
                 <div class="col mr-2">
-                  <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Total Members</span></div>
+                  <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Club members</span></div>
                   <div class="text-dark font-weight-bold h5 mb-0"><span id="stat-members">0</span></div>
                 </div>
                 <div class="col-auto"><i class="fas fa-user-ninja fa-2x text-gray-300"></i></div>
               </div></div></div>
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
-              <div class="card shadow border-left-primary py-2"><div class="card-body"><div class="row align-items-center no-gutters">
+              <div class="card shadow border-left-primary py-2 h-100"><div class="card-body"><div class="row align-items-center no-gutters">
                 <div class="col mr-2">
-                  <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Events conducted so far</span></div>
+                  <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Events held</span></div>
                   <div class="text-dark font-weight-bold h5 mb-0"><span id="stat-events">0</span></div>
                 </div>
                 <div class="col-auto"><i class="fas fa-calendar-day fa-2x text-gray-300"></i></div>
               </div></div></div>
             </div>
           </div>
-          <div class="row">
-            <div class="col">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Let's get started</h6></div>
-                <div class="card-body">
-                  <p class="m-0">This is a software application to reduce amount of menial work we do. We know it is a tedious process to manually make forms, certificates, advertising via mail so we decided to automate that process. I guess it's all pretty self explainatory. Knock yourself out.&nbsp;<br></p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="card shadow mb-4">
-                    <div class="card-header py-3"><h6 class="text-primary m-0 font-weight-bold">Send Alerts&nbsp;<i class="fa fa-send"></i></h6></div>
-                    <div class="card-body">
-                      <p class="m-0" style="padding-bottom: 10px;">You can send alerts to all from here through the alert center. You username would be attached to your message.<br /></p>
-                      <div id="msg"></div>
-                      <form id="alert-form">
-                        <div class="form-group" id="alert-type-group" style="display:none">
-                          <div class="dropdown">
-                            <select class="btn btn-sm btn-primary dropdown-toggle" name="type" id="alert-type">
-                              <option value="info" selected>Information</option>
-                              <option value="success">Success</option>
-                              <option value="warning">Warning</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group"><input type="text" class="form-control btn-sm" placeholder="Enter the message to be sent" name="alertMessage" maxlength="255" required /></div>
-                        <div class="form-group"><input type="submit" class="form-control btn btn-primary btn-sm" /></div>
-                      </form>
-                    </div>
+
+          <div id="next-wrap" hidden>
+            <h5 class="orbit-section-title">What would you like to do?</h5>
+            <div class="row" id="next-steps"></div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-body py-3">
+              <form id="alert-form" class="orbit-announce">
+                <label class="font-weight-bold mb-1" for="alert-message">Post an announcement</label>
+                <p class="small text-muted mb-2">It shows in the bell menu of everyone in this club, with your username.</p>
+                <div class="input-group">
+                  <div class="input-group-prepend" id="alert-type-group" style="display:none">
+                    <select class="custom-select" name="type" id="alert-type" aria-label="Kind of announcement">
+                      <option value="info" selected>Information</option>
+                      <option value="success">Good news</option>
+                      <option value="warning">Warning</option>
+                    </select>
                   </div>
+                  <input type="text" class="form-control" id="alert-message" placeholder="Write a short message" name="alertMessage" maxlength="255" required>
+                  <div class="input-group-append"><button class="btn btn-primary" type="submit">Post</button></div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

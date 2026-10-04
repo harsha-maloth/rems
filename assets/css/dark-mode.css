@@ -138,3 +138,10 @@
 .sun{
     color: rgba(255,255,255,0.1);
 }
+
+/* Dropdown fields (announcement kind on the dashboard) follow the same dark fields as .form-control */
+.custom-select {
+    background-color: #121212;
+    border-color: #121212;
+    color: #ffffff;
+}
