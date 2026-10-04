@@ -1,0 +1,50 @@
+/* ClubOrbit UI rules (looks plan L0).
+ * Additive only: nothing here restyles an existing element. Pages opt in with the .orbit-* classes.
+ * Colours are neutral (rgba) or inherit, so they work in the light theme and in dark-mode.css
+ * (which is loaded after this file). Brand colours stay where they already live (Bootstrap + dark-mode.css). */
+
+:root {
+  /* spacing scale */
+  --orbit-space-1: .25rem;
+  --orbit-space-2: .5rem;
+  --orbit-space-3: .75rem;
+  --orbit-space-4: 1rem;
+  --orbit-space-5: 1.5rem;
+  --orbit-space-6: 2rem;
+  /* shape and lines */
+  --orbit-radius: .35rem;
+  --orbit-line: rgba(128, 128, 128, .28);
+  /* type scale (Nunito, as before) */
+  --orbit-text-title: 1.5rem;
+  --orbit-text-hint: .9rem;
+  --orbit-text-small: .8rem;
+  /* focus ring: same blue as the light theme primary, visible on dark too */
+  --orbit-focus: 0 0 0 .2rem rgba(78, 115, 223, .45);
+}
+
+/* Page header: title, one-line hint, optional action on the right (L1) */
+.orbit-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--orbit-space-3) var(--orbit-space-4);
+  margin-bottom: var(--orbit-space-5);
+  padding-bottom: var(--orbit-space-3);
+  border-bottom: 1px solid var(--orbit-line);
+}
+.orbit-page-header > div:first-child { min-width: 0; flex: 1 1 18rem; }
+.orbit-page-title { font-size: var(--orbit-text-title); font-weight: 700; line-height: 1.25; margin: 0; }
+.orbit-page-title small { font-size: .55em; font-weight: 600; margin-left: var(--orbit-space-2); }
+.orbit-page-header .page-hint { font-size: var(--orbit-text-hint); margin: var(--orbit-space-1) 0 0; max-width: 46rem; }
+/* For later steps: put one main button here */
+.orbit-page-actions { display: flex; flex-wrap: wrap; gap: var(--orbit-space-2); align-items: center; }
+
+/* Keyboard focus is always visible (a11y floor, L8 will extend it) */
+.orbit-page-header a:focus-visible,
+.orbit-focusable:focus-visible { outline: none; box-shadow: var(--orbit-focus); border-radius: var(--orbit-radius); }
+
+@media (max-width: 575.98px) {
+  :root { --orbit-text-title: 1.3rem; }
+  .orbit-page-header { margin-bottom: var(--orbit-space-4); }
+}

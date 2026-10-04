@@ -363,6 +363,12 @@
     flush();
   }
 
+  /** "Report a problem" lives in the profile menu (was a red button on the dashboard). */
+  function reportLinkHtml() {
+    if (!cfg.REPO_URL) return '';
+    return '<a class="dropdown-item" role="presentation" target="_blank" rel="noopener noreferrer" href="' + esc(String(cfg.REPO_URL).replace(/\/$/, '') + '/issues') + '"><i class="fas fa-bug fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Report a problem</a>';
+  }
+
   function topbarHtml(p, alerts) {
     var pic = p.imgsrc && String(p.imgsrc).indexOf('data:image/') === 0 ? p.imgsrc : REMS.DEFAULT_AVATAR;
     var badge = alerts.length ? '<span class="badge badge-danger badge-counter">' + alerts.length + '</span>' : '';
@@ -401,6 +407,7 @@ clubSwitcherHtml() +
 '          <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">' +
 '            <a class="dropdown-item" role="presentation" href="profile.html"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a>' +
 '            <a class="dropdown-item" role="presentation" href="logs.html"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>' +
+reportLinkHtml() +
 '            <div class="dropdown-divider"></div>' +
 '            <a class="dropdown-item" role="presentation" id="rems-logout" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a>' +
 '          </div>' +
