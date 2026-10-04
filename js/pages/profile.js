@@ -15,6 +15,7 @@
   var pictureChanged = false;
 
   function flash(kind, text) {
+    if (REMS.toastIfShort(kind, esc(text))) { msg.innerHTML = ''; return; }
     msg.innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + esc(text) +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);

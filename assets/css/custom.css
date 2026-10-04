@@ -158,3 +158,15 @@
 }
 /* One-line "what this page is for" under each page title */
 .page-hint { font-size: .9rem; margin-top: .25rem; max-width: 46rem; }
+
+/* Step 5: toasts and the styled confirm dialog */
+#orbit-toasts { position: fixed; top: 4.5rem; right: 1rem; z-index: 2000; display: flex; flex-direction: column; gap: .5rem; max-width: min(24rem, calc(100vw - 2rem)); pointer-events: none; }
+.orbit-toast { pointer-events: auto; padding: .65rem .9rem; border-radius: .35rem; color: #fff; box-shadow: 0 .25rem 1rem rgba(0,0,0,.2); font-size: .9rem; transition: opacity .4s, transform .4s; }
+.orbit-toast-success { background: #1cc88a; }
+.orbit-toast-info { background: #36b9cc; }
+.orbit-toast-warning { background: #b8860b; }
+.orbit-toast-danger { background: #c0392b; }
+.orbit-toast-out { opacity: 0; transform: translateX(1rem); }
+.orbit-confirm .modal-body { white-space: pre-line; }
+.orbit-confirm .modal-header { border-bottom: 0; padding-bottom: 0; }
+.orbit-confirm .modal-footer { border-top: 0; }

@@ -12,7 +12,7 @@
   var CHUNK = 500, PAGE = 25, MAX_ROWS = 20000;
   var rows = [], page = 0, total = 0, term = '';
 
-  function flash(kind, html) { $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
+  function flash(kind, html) { if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; } $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
     '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'; window.scrollTo(0, 0); }
 
   // ---- CSV (comma, semicolon or tab separated; quoted cells allowed) ----

@@ -67,6 +67,79 @@
     /** True when the person holds at least one current position in the selected club (wing leads included). */
     holder: function () { return !!REMS.club && REMS.club.titles.length > 0; },
 
+    /**
+     * Styled replacement for window.confirm. Resolves true (OK) or false (Cancel, Esc, click outside).
+     * The message is plain text (line breaks kept), so names typed by users can never inject HTML.
+     * opts: { title, ok (button label), danger (red button, Cancel focused first) }
+     */
+    confirm: function (message, opts) {
+      opts = opts || {};
+      var $j = window.jQuery;
+      if (!$j || !$j.fn || !$j.fn.modal) return Promise.resolve(window.confirm(message));
+      return new Promise(function (resolve) {
+        var old = document.getElementById('orbit-confirm');
+        if (old && old.parentNode) old.parentNode.removeChild(old);
+        var wrap = document.createElement('div');
+        wrap.innerHTML =
+          '<div class="modal fade orbit-confirm" id="orbit-confirm" tabindex="-1" role="alertdialog" aria-modal="true" aria-labelledby="orbit-confirm-title" aria-describedby="orbit-confirm-body">' +
+          '<div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content">' +
+          '<div class="modal-header"><h5 class="modal-title" id="orbit-confirm-title"></h5></div>' +
+          '<div class="modal-body" id="orbit-confirm-body"></div>' +
+          '<div class="modal-footer"><button type="button" class="btn btn-light" id="orbit-confirm-cancel">Cancel</button>' +
+          '<button type="button" class="btn" id="orbit-confirm-ok"></button></div>' +
+          '</div></div></div>';
+        var el = wrap.firstChild;
+        document.body.appendChild(el);
+        el.querySelector('#orbit-confirm-title').textContent = opts.title || 'Are you sure?';
+        el.querySelector('#orbit-confirm-body').textContent = message;
+        var ok = el.querySelector('#orbit-confirm-ok');
+        ok.textContent = opts.ok || 'OK';
+        ok.className = 'btn ' + (opts.danger ? 'btn-danger' : 'btn-primary');
+        var answer = false;
+        ok.addEventListener('click', function () { answer = true; $j(el).modal('hide'); });
+        el.querySelector('#orbit-confirm-cancel').addEventListener('click', function () { $j(el).modal('hide'); });
+        $j(el).on('shown.bs.modal', function () { (opts.danger ? el.querySelector('#orbit-confirm-cancel') : ok).focus(); });
+        $j(el).on('hidden.bs.modal', function () {
+          if (el.parentNode) el.parentNode.removeChild(el);
+          resolve(answer);
+        });
+        $j(el).modal('show');
+      });
+    },
+
+    /** Small message in the corner that fades by itself. kind: success | info | warning | danger. Plain text only. */
+    toast: function (kind, text) {
+      var box = document.getElementById('orbit-toasts');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'orbit-toasts';
+        box.setAttribute('role', 'status');
+        box.setAttribute('aria-live', 'polite');
+        document.body.appendChild(box);
+      }
+      var t = document.createElement('div');
+      t.className = 'orbit-toast orbit-toast-' + (kind || 'info');
+      var icon = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', danger: 'fa-times-circle' }[kind] || 'fa-info-circle';
+      t.innerHTML = '<i class="fas ' + icon + ' mr-2"></i><span></span>';
+      t.querySelector('span').textContent = text;
+      box.appendChild(t);
+      setTimeout(function () { t.classList.add('orbit-toast-out'); setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 400); }, 4000);
+    },
+
+    /**
+     * For a page's flash(): short, link-free success messages become a toast (no jump to the top of the page).
+     * Returns true when it handled the message; the page then skips its inline alert.
+     */
+    toastIfShort: function (kind, html) {
+      if (kind !== 'success') return false;
+      var s = String(html == null ? '' : html);
+      if (/<a[\s>]|<br|<ul|<li|<code/i.test(s)) return false;
+      var text = (new DOMParser().parseFromString(s, 'text/html').body.textContent || '').trim();
+      if (!text || text.length > 120) return false;
+      REMS.toast('success', text);
+      return true;
+    },
+
     /** Id of the selected club, for the club_id column of anything a page creates. */
     clubId: function () { return REMS.club ? REMS.club.id : null; },
 
@@ -234,6 +307,12 @@
       body + '</a>';
   }
 
+  /** " - President" next to the club name (hidden on phones). Plain members show "Member". */
+  function positionLabel(c) {
+    var t = c.titles && c.titles.length ? c.titles.join(', ') : 'Member';
+    return ' <small class="d-none d-sm-inline ml-1" style="opacity:.85">&middot; ' + esc(t) + '</small>';
+  }
+
   /** Club name in the top bar; a dropdown when the person belongs to more than one club. */
   function clubSwitcherHtml() {
     if (!REMS.clubs.length) {
@@ -241,14 +320,14 @@
     }
     var cur = REMS.club;
     if (REMS.clubs.length === 1) {
-      return '<span class="badge badge-primary mr-2 p-2" id="club-switcher" title="' + esc(cur.titles.join(', ')) + '"><i class="fas fa-users mr-1"></i>' + esc(cur.name) + '</span>';
+      return '<span class="badge badge-primary mr-2 p-2" id="club-switcher" title="' + esc(cur.titles.join(', ')) + '"><i class="fas fa-users mr-1"></i>' + esc(cur.name) + positionLabel(cur) + '</span>';
     }
     var items = REMS.clubs.map(function (c) {
       return '<a class="dropdown-item' + (c.id === cur.id ? ' active' : '') + '" href="#" data-club="' + esc(c.id) + '">' + esc(c.name) +
         (c.titles.length ? ' <small class="text-muted">' + esc(c.titles.join(', ')) + '</small>' : '') + '</a>';
     }).join('');
     return '<div class="dropdown mr-2" id="club-switcher">' +
-      '<a class="btn btn-primary btn-sm dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false" aria-label="Switch club"><i class="fas fa-users mr-1"></i>' + esc(cur.name) + '</a>' +
+      '<a class="btn btn-primary btn-sm dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false" aria-label="Switch club"><i class="fas fa-users mr-1"></i>' + esc(cur.name) + positionLabel(cur) + '</a>' +
       '<div class="dropdown-menu">' + items + '</div></div>';
   }
 

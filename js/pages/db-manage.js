@@ -24,6 +24,7 @@
   var editing = null;                      // row object being edited, or null when adding
 
   function flash(kind, text, target) {
+    if (!target && REMS.toastIfShort(kind, esc(text))) { $('msg').innerHTML = ''; return; }
     $(target || 'msg').innerHTML = '<div class="alert alert-' + kind + '" role="alert">' + esc(text) + '</div>';
   }
   function url(p, t) {
@@ -186,7 +187,7 @@
     if (!b) return;
     var row = rows[parseInt(b.dataset.i, 10)];
     if (b.dataset.act === 'edit') return openModal(row);
-    if (!window.confirm('Delete row ' + row.id + ' from "' + table + '"? This cannot be undone.')) return;
+    if (!await REMS.confirm('Delete row ' + row.id + ' from "' + table + '"? This cannot be undone.', { title: 'Delete row', ok: 'Delete', danger: true })) return;
     b.disabled = true;
     var r = await sb.from(table).delete().eq('id', row.id).select(colList());
     if (r.error) { flash('danger', 'Delete failed: ' + r.error.message); b.disabled = false; return; }
