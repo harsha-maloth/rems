@@ -15,6 +15,7 @@
   var form = null, rows = [], total = 0;
 
   function flash(kind, text) {
+    if (REMS.toastIfShort(kind, esc(text))) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + esc(text) +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
   }
@@ -141,7 +142,7 @@
     var b = e.target.closest('button[data-i]');
     if (!b) return;
     var row = rows[parseInt(b.dataset.i, 10)];
-    if (!window.confirm('Delete this registration? This cannot be undone.')) return;
+    if (!await REMS.confirm('Delete this registration? This cannot be undone.', { title: 'Delete registration', ok: 'Delete', danger: true })) return;
     b.disabled = true;
     var r = await sb.from('form_responses').delete().eq('id', row.id).select('id');
     if (r.error) { flash('danger', 'Delete failed: ' + r.error.message); b.disabled = false; return; }

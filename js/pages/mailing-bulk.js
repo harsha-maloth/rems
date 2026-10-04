@@ -15,6 +15,7 @@
   var running = false, stopRequested = false;
 
   function flash(kind, html) {
+    if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);
@@ -150,7 +151,7 @@
     var total = counts[f.listId] || 0;
     if (!total) return flash('warning', 'That list has no people.');
     var listName = $('m-list').selectedOptions[0].textContent.replace(/\s*\(\d+\)$/, '');
-    if (!confirm('Send "' + f.subject + '" to ' + total + ' people in "' + listName + '"?\n\nTip: send a test to yourself first. Keep this tab open until it finishes.')) return;
+    if (!await REMS.confirm('Send "' + f.subject + '" to ' + total + ' people in "' + listName + '"?\n\nTip: send a test to yourself first. Keep this tab open until it finishes.', { title: 'Send email', ok: 'Send', danger: false })) return;
 
     var m = buildMail(f), done = 0, sent = 0, failed = [], error = null;
     stopRequested = false; $('stop-btn').disabled = false;

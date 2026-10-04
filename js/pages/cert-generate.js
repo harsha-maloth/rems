@@ -33,6 +33,7 @@
   var FONT_FAMILY = 'RemsRaleway, Raleway, "Segoe UI", Arial, sans-serif';
 
   function flash(kind, html) {
+    if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);
@@ -325,7 +326,7 @@
     if (!b) return;
     var k = b.dataset.k;
     if (b.dataset.act === 'up') { $('file-' + k).click(); return; }
-    if (!window.confirm('Remove the custom ' + KIND_LABEL[k] + ' template and go back to the built-in design?')) return;
+    if (!await REMS.confirm('Remove the custom ' + KIND_LABEL[k] + ' template and go back to the built-in design?', { title: 'Remove template', ok: 'Remove', danger: true })) return;
     b.disabled = true;
     var r = await store().remove([tpl[k].path]);
     if (r.error) { flash('danger', 'Could not remove the template: ' + esc(r.error.message)); b.disabled = false; return; }
@@ -512,8 +513,8 @@
         var old = await sb.from('certificates').select('id').eq('club_id', CLUB).eq('event_name', existing).limit(5000);
         if (old.error) throw old.error;
         oldIds = old.data.map(function (r) { return r.id; });
-        if (!window.confirm('"' + existing + '" already exists with ' + oldIds.length + ' certificate' + (oldIds.length === 1 ? '' : 's') +
-          '.\nGenerate again and replace them? (The old certificate links stop working.)')) { setRunning(false); return; }
+        if (!await REMS.confirm('"' + existing + '" already exists with ' + oldIds.length + ' certificate' + (oldIds.length === 1 ? '' : 's') +
+          '.\nGenerate again and replace them? (The old certificate links stop working.)', { title: 'Replace existing certificates', ok: 'Replace', danger: true })) { setRunning(false); return; }
       }
 
       setProgress(0, total, 'Loading fonts and templates...');
@@ -624,7 +625,7 @@
     var b = e.target.closest('button[data-i]');
     if (!b || running) return;
     var ev = events[parseInt(b.dataset.i, 10)];
-    if (!window.confirm('Delete the event "' + ev.event_name + '" with all its certificates and image files?\nThe public links stop working. This cannot be undone.')) return;
+    if (!await REMS.confirm('Delete the event "' + ev.event_name + '" with all its certificates and image files?\nThe public links stop working. This cannot be undone.', { title: 'Delete event', ok: 'Delete', danger: true })) return;
     b.disabled = true;
     try {
       var c = await sb.from('certificates').delete().eq('event_name', ev.event_name);

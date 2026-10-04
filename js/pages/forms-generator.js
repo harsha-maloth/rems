@@ -24,6 +24,7 @@
   var MAX_FIELDS = 30;
 
   function flash(kind, html) {
+    if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);
@@ -155,8 +156,8 @@
       return;
     }
     var count = f.form_responses && f.form_responses[0] ? f.form_responses[0].count : 0;
-    if (!window.confirm('Delete "' + f.name + '"' + (count ? ' and its ' + count + ' registration' + (count === 1 ? '' : 's') : '') +
-      '?\nThe share link will stop working. This cannot be undone.' + (count ? '\n\nTip: download the CSV first.' : ''))) return;
+    if (!await REMS.confirm('Delete "' + f.name + '"' + (count ? ' and its ' + count + ' registration' + (count === 1 ? '' : 's') : '') +
+      '?\nThe share link will stop working. This cannot be undone.' + (count ? '\n\nTip: download the CSV first.' : ''), { title: 'Delete form', ok: 'Delete', danger: true })) return;
     b.disabled = true;
     var r = await sb.from('forms').delete().eq('id', f.id).select('id');
     if (r.error) { flash('danger', 'Delete failed: ' + esc(r.error.message)); b.disabled = false; return; }

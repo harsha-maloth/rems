@@ -17,10 +17,25 @@
 
   $('club-name').textContent = club.name;
   // Hide what the club-wide permissions of this person do not allow (the database still decides).
-  if (!REMS.can('position.assign')) $('pe-card').style.display = 'none';
-  if (!REMS.can('team.manage')) $('t-add').style.display = 'none';
+  // Say why, instead of silently hiding (the database still decides).
+  function lockNote(el, text) {
+    var n = document.createElement('p');
+    n.className = 'text-muted small';
+    n.innerHTML = '<i class="fas fa-lock mr-1"></i>';
+    n.appendChild(document.createTextNode(text));
+    el.parentNode.insertBefore(n, el);
+  }
+  if (!REMS.can('position.assign')) {
+    $('pe-card').style.display = 'none';
+    lockNote($('pe-card'), 'Creating and editing positions needs a position that allows it, such as the President.');
+  }
+  if (!REMS.can('team.manage')) {
+    $('t-add').style.display = 'none';
+    lockNote($('t-add'), 'Adding teams needs a position that allows it, such as the President.');
+  }
 
   function flash(kind, html) {
+    if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);
@@ -155,7 +170,7 @@
   $('m-body').addEventListener('click', async function (e) {
     var b = e.target.closest('button[data-remove]');
     if (!b) return;
-    if (!confirm('Remove ' + b.getAttribute('data-name') + ' from the club? Their positions end too.')) return;
+    if (!await REMS.confirm('Remove ' + b.getAttribute('data-name') + ' from the club? Their positions end too.', { title: 'Remove member', ok: 'Remove', danger: true })) return;
     try { await call('remove_member', { p_club: cid, p_profile: b.getAttribute('data-remove') }); flash('success', 'Member removed.'); await load(); }
     catch (err) { fail(err); }
   });
@@ -182,7 +197,7 @@
   $('a-handover').addEventListener('click', async function () {
     try {
       var a = appointArgs();
-      if (!confirm('Hand over ' + a.p.title + ' to ' + a.email + '? The current holder stops holding it immediately.')) return;
+      if (!await REMS.confirm('Hand over ' + a.p.title + ' to ' + a.email + '? The current holder stops holding it immediately.', { title: 'Hand over position', ok: 'Hand over', danger: true })) return;
       await call('handover', { p_club: cid, p_position: a.p.position_id, p_team: a.team, p_new_email: a.email });
       $('a-email').value = '';
       flash('success', 'Handed over ' + esc(a.p.title) + ' to ' + esc(a.email) + '.');
@@ -199,7 +214,7 @@
     try {
       if (end) {
         e.preventDefault();
-        if (!confirm('End the term of ' + end.getAttribute('data-name') + '? It takes effect immediately.')) return;
+        if (!await REMS.confirm('End the term of ' + end.getAttribute('data-name') + '? It takes effect immediately.', { title: 'End term', ok: 'End term', danger: true })) return;
         await call('end_term', { p_term: Number(end.getAttribute('data-end')) });
         flash('success', 'Term ended.'); await load();
       } else if (edit) {
@@ -210,7 +225,7 @@
         Array.prototype.forEach.call($('pe-perms').querySelectorAll('input'), function (i) { i.checked = (p.permissions || []).indexOf(i.value) > -1; });
         $('pe-card').scrollIntoView({ behavior: 'smooth' });
       } else if (del) {
-        if (!confirm('Delete the position "' + del.getAttribute('data-name') + '"?')) return;
+        if (!await REMS.confirm('Delete the position "' + del.getAttribute('data-name') + '"?', { title: 'Delete position', ok: 'Delete', danger: true })) return;
         await call('delete_position', { p_club: cid, p_id: Number(del.getAttribute('data-del')) });
         flash('success', 'Position deleted.'); await load();
       }
@@ -253,7 +268,7 @@
   $('t-list').addEventListener('click', async function (e) {
     var b = e.target.closest('button[data-delteam]');
     if (!b) return;
-    if (!confirm('Delete the team "' + b.getAttribute('data-name') + '"?')) return;
+    if (!await REMS.confirm('Delete the team "' + b.getAttribute('data-name') + '"?', { title: 'Delete team', ok: 'Delete', danger: true })) return;
     var r = await sb.from('teams').delete().eq('id', Number(b.getAttribute('data-delteam')));
     if (r.error) return fail(r.error.code === '23503' ? { message: 'This team still has members or position holders, so it cannot be deleted.' } : r.error);
     flash('success', 'Team deleted.'); await load();

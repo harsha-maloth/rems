@@ -18,6 +18,7 @@
   var page = 0;
 
   function flash(kind, html) {
+    if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);
@@ -212,14 +213,14 @@
     var b = e.target.closest('button'); if (!b) return;
     if (b.classList.contains('act-view')) return showMembers(b.dataset.id, 0);
     if (b.classList.contains('act-rm')) {
-      if (!open || !confirm('Remove this person from the list?')) return;
+      if (!open || !await REMS.confirm('Remove this person from the list?', { title: 'Remove person', ok: 'Remove', danger: true })) return;
       var r = await sb.from('mailing_list_members').delete().eq('id', b.dataset.id);
       if (r.error) return flash('danger', esc(r.error.message));
       await REMS.log('Removed a person from mailing list "' + open.name + '"');
       var id = open.id; await loadLists(); await showMembers(id, page);
     } else if (b.classList.contains('act-del')) {
       var l = byId(b.dataset.id); if (!l) return;
-      if (!confirm('Delete the list "' + l.name + '" and its ' + l.count + ' people? This cannot be undone.')) return;
+      if (!await REMS.confirm('Delete the list "' + l.name + '" and its ' + l.count + ' people? This cannot be undone.', { title: 'Delete list', ok: 'Delete', danger: true })) return;
       var d = await sb.from('mailing_lists').delete().eq('id', l.id);
       if (d.error) return flash('danger', esc(d.error.message));
       await REMS.log('Deleted mailing list "' + l.name + '"');

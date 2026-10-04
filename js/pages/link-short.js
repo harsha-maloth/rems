@@ -19,6 +19,7 @@
   $('s-prefix').textContent = base.replace(/^https?:\/\//, '');
 
   function flash(kind, html) {
+    if (REMS.toastIfShort(kind, html)) { $('msg').innerHTML = ''; return; }
     $('msg').innerHTML = '<div class="alert alert-' + kind + ' alert-dismissible" role="alert">' + html +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
     window.scrollTo(0, 0);
@@ -103,7 +104,7 @@
     var l = rows[Number(b.dataset.i)]; if (!l) return;
     if (b.classList.contains('act-copy')) return copy(shortOf(l.slug), b);
     if (b.classList.contains('act-del')) {
-      if (!confirm('Delete the short link /s/' + l.slug + '? Anyone who has it will get an error.')) return;
+      if (!await REMS.confirm('Delete the short link /s/' + l.slug + '? Anyone who has it will get an error.', { title: 'Delete short link', ok: 'Delete', danger: true })) return;
       var d = await sb.from('short_links').delete().eq('id', l.id);
       if (d.error) return flash('danger', esc(d.error.message));
       await REMS.log('Deleted short link /s/' + l.slug);
