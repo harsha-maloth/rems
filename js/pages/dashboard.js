@@ -5,7 +5,6 @@
   await REMS.mountLayout();
   document.body.style.visibility = 'visible';
 
-  document.getElementById('issue-link').href = REMS.cfg.REPO_URL.replace(/\/$/, '') + '/issues';
   if (REMS.can('announcement.post')) document.getElementById('alert-type-group').style.display = '';
 
   var form = document.getElementById('alert-form');
